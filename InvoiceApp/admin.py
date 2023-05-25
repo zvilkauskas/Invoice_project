@@ -49,6 +49,7 @@ class ServiceAdmin(admin.ModelAdmin):
         'service_price', 'admin_date_created', 'admin_last_updated'
     )
 
+
 class InvoiceAdmin(admin.ModelAdmin):
     @admin.display(description='Sukurta')
     def admin_date_created(self, obj):

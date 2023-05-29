@@ -1,0 +1,4 @@
+.centerdiv {
+    display: grid;
+    place-items: center;
+}

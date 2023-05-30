@@ -45,14 +45,23 @@ class UserLoginForm(forms.ModelForm):
             'username', 'password',
         )
 
-class RegistrationForm(UserCreationForm):
-    username = forms.CharField(max_length=150)
-    first_name = forms.CharField(max_length=150)
-    last_name = forms.CharField(max_length=150)
-    position = forms.CharField(max_length=150)
-    email = forms.EmailField(max_length=150)
-    password = forms.CharField(widget=forms.PasswordInput)
-    password2 = forms.CharField(widget=forms.PasswordInput)
-    class Meta:
-        model = User
-        fields = ['username', 'first_name', 'last_name', 'position', 'email', 'password', 'password2']
+# class RegistrationForm(UserCreationForm):
+#     username = forms.CharField(max_length=150)
+#     first_name = forms.CharField(max_length=150)
+#     last_name = forms.CharField(max_length=150)
+#     position = forms.CharField(max_length=150)
+#     email = forms.EmailField(max_length=150)
+#     password1 = forms.CharField(widget=forms.PasswordInput)
+#     password2 = forms.CharField(widget=forms.PasswordInput)
+#     class Meta:
+#         model = User
+#         fields = ['username', 'first_name', 'last_name', 'email', 'password1', 'password2']
+#
+#     def __init__(self, *args, **kwargs):
+#         super(RegistrationForm, self).__init__(*args, **kwargs)
+#         self.fields['username'].widget.attrs['class'] = 'form-control'
+#         self.fields['first_name'].widget.attrs['class'] = 'form-control'
+#         self.fields['last_name'].widget.attrs['class'] = 'form-control'
+#         self.fields['email'].widget.attrs['class'] = 'form-control'
+#         self.fields['password1'].widget.attrs['class'] = 'form-control'
+#         self.fields['password2'].widget.attrs['class'] = 'form-control'

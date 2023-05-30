@@ -83,7 +83,7 @@
 
     
     <!-- Custom styles for this template -->
-    <link href="sign-in.css" rel="stylesheet">
+    <link href="/static/css/sign-in.css" rel="stylesheet">
   </head>
   <body class="text-center">
     <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
@@ -139,7 +139,8 @@
 
     
 <main class="form-signin w-100 m-auto">
-  <form>
+  <form method="POST">
+    {% csrf_token %}
     <h1 class="h3 mb-3 fw-normal">Prisijunkite norėdami tęsti</h1>
 
     <div class="form-floating">
@@ -151,13 +152,9 @@
       <label for="floatingPassword">Slaptažodis</label>
     </div>
 
-    <div class="checkbox mb-3">
-      <label>
-        <input type="checkbox" value="remember-me"> Prisiminti mane
-      </label>
-    </div>
     <button class="w-100 btn btn-lg btn-primary" style="margin-bottom: 10px;" type="submit">Prisijungti</button>
     <a href="{% url 'register'%}" class="w-100 btn btn-lg btn-primary" style="margin-bottom: 10px;" type="submit">Registruotis</a>
   </form>
+</main>
 
 {% endblock %}

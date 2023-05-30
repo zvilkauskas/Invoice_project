@@ -3,23 +3,9 @@
 
 {% load static %}
 {% block content %}
-<!doctype html>
-<html lang="en" data-bs-theme="auto">
-  <head>
-
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="">
-    <meta name="author" content="">
-    <meta name="generator" content="">
-    <title>Prisijungti</title>
-
-    <link rel="canonical" href="">
-
 
 <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
 <link href="{% static 'css/sign-in.css' %}" rel="stylesheet">
-
 
     <style>
       .bd-placeholder-img {
@@ -173,10 +159,5 @@
     <button class="w-100 btn btn-lg btn-primary" style="margin-bottom: 10px;" type="submit">Prisijungti</button>
     <a href="{% url 'register'%}" class="w-100 btn btn-lg btn-primary" style="margin-bottom: 10px;" type="submit">Registruotis</a>
   </form>
-</main>
 
-
-    
-  </body>
-</html>
 {% endblock %}

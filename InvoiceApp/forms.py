@@ -1,6 +1,8 @@
 from django import forms
 from django.contrib.auth.models import User
+from django.contrib.auth.forms import UserCreationForm
 from .models import Client, Product, Service, Invoice
+
 
 
 class DateInputForm(forms.ModelForm):
@@ -42,3 +44,15 @@ class UserLoginForm(forms.ModelForm):
         fields = (
             'username', 'password',
         )
+
+class RegistrationForm(UserCreationForm):
+    username = forms.CharField(max_length=150)
+    first_name = forms.CharField(max_length=150)
+    last_name = forms.CharField(max_length=150)
+    position = forms.CharField(max_length=150)
+    email = forms.EmailField(max_length=150)
+    password = forms.CharField(widget=forms.PasswordInput)
+    password2 = forms.CharField(widget=forms.PasswordInput)
+    class Meta:
+        model = User
+        fields = ['username', 'first_name', 'last_name', 'position', 'email', 'password', 'password2']

@@ -1,10 +1,16 @@
 from django import forms
 from django.contrib.auth.models import User
+<<<<<<< HEAD
 from django.contrib.auth.forms import UserCreationForm
 from .models import Client, Product, Service, Invoice
 
 
 
+=======
+from .models import Client, Product, Service, Invoice
+
+
+>>>>>>> forms
 class DateInputForm(forms.ModelForm):
     input_type = 'date'
 
@@ -30,6 +36,10 @@ class ServiceForm(forms.ModelForm):
         )
 
 class InvoiceForm(forms.ModelForm):
+<<<<<<< HEAD
+=======
+
+>>>>>>> forms
     class Meta:
         model = Invoice
         fields = (
@@ -38,6 +48,7 @@ class InvoiceForm(forms.ModelForm):
         )
         widgets = {'due_date': forms.DateInput(format='%Y-%m-%d', attrs={'type': 'date'}),}
 
+<<<<<<< HEAD
 class UserLoginForm(forms.ModelForm):
     class Meta:
         model = User
@@ -65,3 +76,17 @@ class UserLoginForm(forms.ModelForm):
 #         self.fields['email'].widget.attrs['class'] = 'form-control'
 #         self.fields['password1'].widget.attrs['class'] = 'form-control'
 #         self.fields['password2'].widget.attrs['class'] = 'form-control'
+=======
+
+
+# type="email" class="form-control" id="floatingInput" placeholder="name@example.com"
+class UserLoginForm(forms.ModelForm):
+    # username = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control mb-3', 'id': 'floatingInput', 'for':"floatingInput"}), required=True)
+    # password = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'form-control mb-3', 'id': 'floatingPassword'}), required=True)
+
+    class Meta:
+        model = User
+        fields = (
+            'email', 'password',
+        )
+>>>>>>> forms

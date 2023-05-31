@@ -1,11 +1,18 @@
 {% extends "base.html" %}
+<<<<<<< HEAD
 
 
+=======
+>>>>>>> forms
 {% load static %}
 {% block content %}
 
 <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+<<<<<<< HEAD
 <link href="{% static 'css/sign-in.css' %}" rel="stylesheet">
+=======
+<link href="{% static 'css/signin.css' %}" rel="stylesheet">
+>>>>>>> forms
 
     <style>
       .bd-placeholder-img {
@@ -81,10 +88,16 @@
       }
     </style>
 
+<<<<<<< HEAD
     
     <!-- Custom styles for this template -->
     <link href="/static/css/sign-in.css" rel="stylesheet">
   </head>
+=======
+    <!-- Custom styles for this template -->
+    <link href="{% static 'css/signin.css' %}" rel="stylesheet">
+
+>>>>>>> forms
   <body class="text-center">
     <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
       <symbol id="check2" viewBox="0 0 16 16">
@@ -137,6 +150,7 @@
       </ul>
     </div>
 
+<<<<<<< HEAD
     
 <main class="form-signin w-100 m-auto">
   <form method="POST">
@@ -158,3 +172,49 @@
 </main>
 
 {% endblock %}
+=======
+
+
+
+    <main class="form-signin w-100 m-auto">
+      <form action="{% url 'login'%}" method="POST">
+        {% csrf_token %}
+
+        {% if messages %}
+          {% for message in messages %}
+            {% if message.tags == 'error' %}
+              <div class="alert alert-danger">
+                {{ message }}
+              </div>
+            {% else %}
+              <div class="alert alert-{{ message.tags }}">
+                {{ message }}
+              </div>
+            {% endif %}
+          {% endfor %}
+        {% endif %}
+
+        <h1 class="h3 mb-3 fw-normal">Prisijunkite norėdami tęsti</h1>
+
+        <div class="form-floating">
+          <input type="text" name="username" class="form-control" id="floatingInput" placeholder="Vartotojo vardas">
+          <label for="floatingInput">Vartotojo vardas</label>
+        </div>
+
+        <div class="form-floating">
+          <input type="password" name="password" class="form-control" id="floatingPassword" placeholder="Slaptažodis">
+          <label for="floatingPassword">Slaptažodis</label>
+        </div>
+
+        <div>
+          <button class="w-100 btn btn-lg btn-primary" style="margin-bottom: 10px;" type="submit" value="{{ next }}">Prisijungti</button>
+        </div>
+
+        <div>
+          <a href="{% url 'register'%}" class="w-100 btn btn-lg btn-primary" style="margin-bottom: 10px;" type="submit">Registruotis</a>
+        </div>
+      </form>
+    </main>
+  </body>
+{% endblock %}
+>>>>>>> forms

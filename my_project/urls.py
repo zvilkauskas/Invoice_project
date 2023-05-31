@@ -16,6 +16,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+<<<<<<< HEAD
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib.auth.views import LoginView
@@ -27,3 +28,13 @@ urlpatterns = [
     path('invoice/', include('InvoiceApp.urls')),
 
 ] + (static(settings.STATIC_URL, document_root=settings.STATIC_ROOT))
+=======
+from . import views
+
+urlpatterns = [
+    path('login/', views.login, name='login'),
+    path('register/', views.register, name='register'),
+    path('account/', include('django.contrib.auth.urls')),
+    path('dashboard/', views.dashboard, name='dashboard'),
+]
+>>>>>>> forms

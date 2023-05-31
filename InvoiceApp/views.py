@@ -5,8 +5,9 @@ from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_protect
 from django.contrib import messages
 from django.views import generic
-#from .forms import RegistrationForm
-from django.contrib.auth import login, authenticate
+from .forms import UserLoginForm
+
+from django.contrib.auth.models import User, auth
 
 
 
@@ -95,7 +96,7 @@ def login(request):
         username = request.POST['username']
         password = request.POST['password']
 
-        user = auth.authenticate(email=email, password=password)
+        user = auth.authenticate(username=username, password=password)
 
         if user is not None:
             auth.login(request, user)

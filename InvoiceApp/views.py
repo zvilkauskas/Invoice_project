@@ -73,8 +73,37 @@ def register(request):
 
 
 
+def anonymous_required(function=None, redirect_url=None):
+    if not redirect_url:
+        redirect_url = 'dashboard'
+
+    actual_decorator = user_passes_test(lambda user: user.is_anonymous, login_url=redirect_url)
+    if function:
+        return actual_decorator
+
+@anonymous_required
+# # Index view: loads login.html instead of some kind of index page
 def login(request):
     context = {}
+    if request.method == 'GET':
+        form = UserLoginForm()
+        context['form'] = form
+        return render(request, 'registration/login.html', context)
+
+    if request.method == 'POST':
+        form = UserLoginForm(request.POST)
+        username = request.POST['username']
+        password = request.POST['password']
+
+        user = auth.authenticate(email=email, password=password)
+
+        if user is not None:
+            auth.login(request, user)
+            return redirect('dashboard')
+        else:
+            context['form'] = form
+            messages.error(request, 'Blogi prisijungimo duomenys')
+            return redirect('login')
     return render(request, 'registration/login.html', context)
 
 @login_required

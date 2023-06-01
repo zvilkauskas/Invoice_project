@@ -5,6 +5,7 @@ from django.views.decorators.csrf import csrf_protect
 from django.contrib import messages
 from django.views import generic
 from .forms import UserLoginForm
+from django.contrib.auth import logout
 
 from django.contrib.auth.models import User, auth
 
@@ -57,7 +58,6 @@ def anonymous_required(function=None, redirect_url=None):
 
 
 @anonymous_required
-# # Index view: loads login.html instead of some kind of index page
 def login(request):
     context = {}
     if request.method == 'GET':
@@ -86,3 +86,7 @@ def login(request):
 def index(request):
     context = {}
     return render(request, 'index.html', context)
+
+def logged_out(request):
+    logout(request)
+    return render(request, 'logged_out.html')

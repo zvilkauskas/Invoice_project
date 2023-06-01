@@ -7,15 +7,7 @@
 {% if user.is_authenticated %}
 {% csrf_token %}
 
-  <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
-  <link href="{% static 'css/dashboard.css' %}" rel="stylesheet">
-
         <body>
-            {% if user.is_authenticated %}
-            {% csrf_token %}
-
-            <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
-            <link href="{% static 'css/dashboard.css' %}" rel="stylesheet">
 
                 <style>
                     .bd-placeholder-img {
@@ -92,6 +84,7 @@
                 </style>
 
                 <!-- Custom styles for this template -->
+                <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
                 <link href="{% static 'css/dashboard.css' %}" rel="stylesheet">
 
                 <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
@@ -118,7 +111,7 @@
                   <input class="form-control form-control-dark w-100 rounded-0 border-0" type="text" placeholder="Paieška" aria-label="Search">
                   <div class="navbar-nav">
                     <div class="nav-item text-nowrap">
-                      <a class="nav-link px-3" href="{% url 'logout'%}">Atsijungti</a>
+                      <a class="nav-link px-3" href="{% url 'logged_out'%}">Atsijungti</a>
                     </div>
                   </div>
                 </header>
@@ -352,9 +345,6 @@
 {% else %}
     <li class="nav-item"><a class="nav-link" href="{% url 'login'%}?next={{request.path}}">Prisijungti</a></li>
 {% endif %}
-
-
-
 
               <script src="https://cdn.jsdelivr.net/npm/chart.js@4.2.1/dist/chart.umd.min.js" integrity="sha384-gdQErvCNWvHQZj6XZM0dNsAoY4v+j5P1XDpNkcM3HJG1Yx04ecqIHk7+4VBOCHOG" crossorigin="anonymous"></script>
               <script src="{% static 'js/dashboard2.js' %}"></script>

@@ -3,6 +3,7 @@
 {% load static %}
 
 {% block content %}
+
 {% if user.is_authenticated %}
 {% csrf_token %}
 
@@ -348,12 +349,15 @@
                     </main>
                   </div>
                 </div>
-            {% endif %}
+{% else %}
+    <li class="nav-item"><a class="nav-link" href="{% url 'login'%}?next={{request.path}}">Prisijungti</a></li>
+{% endif %}
 
-            {% block content %}
 
-            {% endblock %}
+
 
               <script src="https://cdn.jsdelivr.net/npm/chart.js@4.2.1/dist/chart.umd.min.js" integrity="sha384-gdQErvCNWvHQZj6XZM0dNsAoY4v+j5P1XDpNkcM3HJG1Yx04ecqIHk7+4VBOCHOG" crossorigin="anonymous"></script>
               <script src="{% static 'js/dashboard2.js' %}"></script>
         </body>
+
+{% endblock %}

@@ -24,9 +24,11 @@ from django.contrib.auth.views import LoginView
 
 
 urlpatterns = [
-    #path('', LoginView.as_view()),
-    path('', RedirectView.as_view(url='InvoiceApp/', permanent=False)),
+    # path('', LoginView.as_view()),
+    #path('/', views.index, name='index'),
     path('admin/', admin.site.urls),
-    path('invoice/', include('InvoiceApp.urls')),
+    path('', include('InvoiceApp.index')),
+    path('invoices/', include('InvoiceApp.urls')),
+    path('', RedirectView.as_view(url='invoice/index', permanent=False)),
 
 ] + (static(settings.STATIC_URL, document_root=settings.STATIC_ROOT))

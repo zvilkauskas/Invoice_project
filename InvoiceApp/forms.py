@@ -6,7 +6,7 @@ from .models import Client, Product, Service, Invoice
 class DateInputForm(forms.ModelForm):
     input_type = 'date'
 
-class ClientForm(forms.ModelForm):
+class AddNewClientForm(forms.ModelForm):
     class Meta:
         model = Client
         fields = (

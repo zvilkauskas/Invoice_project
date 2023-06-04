@@ -151,7 +151,7 @@ def products(request):
         form = AddNewProductForm()
         context['form'] = form
 
-        return render(request, 'products.html', context)
+        return render(request, 'main_page.html', context)
 
     if request.method == 'POST':
         form = AddNewProductForm(request.POST)
@@ -180,7 +180,7 @@ def services(request):
         form = AddNewProductForm()
         context['form'] = form
 
-        return render(request, 'services.html', context)
+        return render(request, 'main_page.html', context)
 
     if request.method == 'POST':
         form = AddNewServiceForm(request.POST)

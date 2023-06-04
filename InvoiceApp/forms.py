@@ -13,21 +13,21 @@ class AddNewClientForm(forms.ModelForm):
             'client_name', 'registration_number', 'vat_number', 'address', 'email_address', 'phone_number',
         )
 
-class ProductForm(forms.ModelForm):
+class AddNewProductForm(forms.ModelForm):
     class Meta:
         model = Product
         fields = (
             'product_name', 'product_code', 'product_description', 'product_quantity', 'product_price',
         )
 
-class ServiceForm(forms.ModelForm):
+class AddNewServiceForm(forms.ModelForm):
     class Meta:
         model = Service
         fields = (
             'service_name', 'service_code', 'service_description', 'service_quantity', 'service_price',
         )
 
-class InvoiceForm(forms.ModelForm):
+class AddNewInvoiceForm(forms.ModelForm):
 
     class Meta:
         model = Invoice

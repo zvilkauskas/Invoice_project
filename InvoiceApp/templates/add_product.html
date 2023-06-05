@@ -1,0 +1,45 @@
+{% if user.is_authenticated %}
+
+    <div>
+        <form method="POST">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="product_name"></label>
+                <input name="product_name" type="text" class="form-control" id="product_name"
+                       placeholder="Prekės pavadinimas">
+                <small class="form-text text-muted">Iki 500 simbolių.</small>
+            </div>
+            <div class="form-group">
+                <label for="product_code"></label>
+                <input name="product_code" type="text" class="form-control" id="product_code"
+                       placeholder="Prekės kodas">
+                <small class="form-text text-muted">Iki 50 simbolių.</small>
+            </div>
+            <div class="form-group">
+                <label for="product_description"></label>
+                <textarea name="product_description" type="text" class="form-control" id="product_description"
+                          placeholder="Prekės aprašymas"></textarea>
+                <small class="form-text text-muted">Iki 1000 simbolių.</small>
+            </div>
+            <div class="form-group">
+                <label for="product_quantity"></label>
+                <input name="product_quantity" type="number" class="form-control" id="product_quantity"
+                       placeholder="Kiekis">
+                <small class="form-text text-muted">Iki 150 simbolių.</small>
+            </div>
+            <div class="form-group">
+                <label for="product_price"></label>
+                <input name="product_price" type="number" class="form-control" id="product_price"
+                       placeholder="Kaina">
+                <small class="form-text text-muted">Iki 150 simbolių.</small>
+            </div>
+            <button type="submit" class="btn btn-primary">Saugoti</button>
+            <a href="{% url 'products' %}" class="btn btn-secondary">Grįžti</a>
+        </form>
+    </div>
+    <style>
+        Input {max-width: 310px;}
+        TextArea {max-width: 310px;}
+    </style>
+
+{% endif %}

@@ -165,6 +165,22 @@ def products(request):
 
     return render(request, 'products.html', context)
 
+@login_required
+def add_product(request):
+    if request.method == 'POST':
+        form = AddNewClientForm(request.POST)
+        if form.is_valid:
+            form.save()
+            messages.success(request, 'Prekė pridėta')
+            return redirect('products')
+        else:
+            messages.error(request, 'Nepavyko')
+            return redirect('add_product')
+        context = {
+            'form': form
+        }
+    return render(request, 'products.html', context)
+
 
 @login_required
 def services(request):
@@ -195,6 +211,4 @@ def services(request):
 
 @login_required
 def invoices(request):
-    context = {}
-    return render(request, 'invoices.html', context)
     pass

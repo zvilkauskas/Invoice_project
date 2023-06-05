@@ -1,9 +1,35 @@
-<button class="btn btn-success">Create new</button>
-<table>
-    <thead>
-    <th>Klientas</th>
-    </thead>
-    <tbody>
-    <td>Zilvinas</td>
-    </tbody>
-</table>
+{% if user.is_authenticated %}
+{% csrf_token %}
+        <div>
+            <a href="{% url 'add_client' %}" class="btn btn-primary">Pridėti klientą</a>
+        </div>
+
+        <div class="table-responsive">
+            <table class="table table-striped table-sm">
+                <thead>
+                    <tr>
+                        <th scope="col">Kliento pavadinimas</th>
+                        <th scope="col">Įmonės kodas</th>
+                        <th scope="col">PVM kodas</th>
+                        <th scope="col">Adresas</th>
+                        <th scope="col">El. paštas</th>
+                        <th scope="col">Telefono numeris</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                {% for client in clients %}
+                <tr>
+                    <td>{{ client.client_name }}</td>
+                    <td>{{ client.registration_number }}</td>
+                    <td>{{ client.vat_number }}</td>
+                    <td>{{ client.address }}</td>
+                    <td>{{ client.email_address }}</td>
+                    <td>{{ client.phone_number }}</td>
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+{% endif %}

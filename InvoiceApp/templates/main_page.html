@@ -19,17 +19,26 @@
     </div>
 
     {% if current_route == 'clients' %}
-    {% include "clients.html" %}
+        {% include "clients.html" %}
+
+    {% elif current_route == 'add_client' %}
+        {% include "add_client.html" %}
 
     {% elif current_route == 'products' %}
-    {% include "products.html" %}
+        {% include "products.html" %}
 
+    {% elif current_route == 'add_product' %}
+        {% include "add_product.html" %}
 
     {% elif current_route == 'services' %}
-    {% include "services.html" %}
+        {% include "services.html" %}
+
+    {% elif current_route == 'add_service' %}
+        {% include "add_service.html" %}
 
     {% elif current_route == 'invoices' %}
-    {% include "invoices.html" %}
+        {% include "invoices.html" %}
+
     {% endif %}
 
 </main>

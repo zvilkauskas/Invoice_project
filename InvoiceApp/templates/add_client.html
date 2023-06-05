@@ -1,0 +1,51 @@
+{% if user.is_authenticated %}
+
+    <div>
+        <form method="POST">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="client_name"></label>
+                <input name="client_name" type="text" class="form-control" id="client_name"
+                       placeholder="Kliento pavadinimas">
+                <small class="form-text text-muted">Iki 200 simbolių.</small>
+            </div>
+            <div class="form-group">
+                <label for="registration_number"></label>
+                <input name="registration_number" type="text" class="form-control" id="registration_number"
+                       placeholder="Įmonės kodas">
+                <small class="form-text text-muted">Iki 50 simbolių.</small>
+            </div>
+            <div class="form-group">
+                <label for="vat_number"></label>
+                <input name="vat_number" type="text" class="form-control" id="vat_number"
+                          placeholder="PVM kodas">
+                <small class="form-text text-muted">Iki 50 simbolių.</small>
+            </div>
+            <div class="form-group">
+                <label for="address"></label>
+                <input name="address" type="text" class="form-control" id="address"
+                       placeholder="Adresas">
+                <small class="form-text text-muted">Iki 200 simbolių.</small>
+            </div>
+            <div class="form-group">
+                <label for="email_address"></label>
+                <input name="email_address" type="email" class="form-control" id="email_address"
+                       placeholder="El. paštas">
+                <small class="form-text text-muted">Iki 100 simbolių.</small>
+            </div>
+            <div class="form-group">
+                <label for="phone_number"></label>
+                <input name="phone_number" type="number" class="form-control" id="phone_number"
+                       placeholder="Telefono numeris">
+                <small class="form-text text-muted">Iki 20 simbolių.</small>
+            </div>
+            <button type="submit" class="btn btn-primary">Saugoti</button>
+            <a href="{% url 'clients' %}" class="btn btn-secondary">Grįžti</a>
+        </form>
+    </div>
+    <style>
+        Input {max-width: 310px;}
+        TextArea {max-width: 310px;}
+    </style>
+
+{% endif %}

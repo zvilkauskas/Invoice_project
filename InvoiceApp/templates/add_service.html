@@ -1,0 +1,44 @@
+{% if user.is_authenticated %}
+
+    <div>
+        <form method="POST">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="service_name"></label>
+                <input name="service_name" type="text" class="form-control" id="service_name"
+                       placeholder="Paslaugos pavadinimas">
+                <small class="form-text text-muted">Iki 500 simbolių.</small>
+            </div>
+            <div class="form-group">
+                <label for="service_code"></label>
+                <input name="service_code" type="text" class="form-control" id="service_code"
+                       placeholder="Paslaugos kodas">
+                <small class="form-text text-muted">Iki 50 simbolių.</small>
+            </div>
+            <div class="form-group">
+                <label for="service_description"></label>
+                <textarea name="service_description" type="text" class="form-control" id="service_description"
+                          placeholder="Paslaugos aprašymas"></textarea>
+                <small class="form-text text-muted">Iki 1000 simbolių.</small>
+            </div>
+            <div class="form-group">
+                <label for="service_quantity"></label>
+                <input name="service_quantity" type="number" class="form-control" id="service_quantity"
+                       placeholder="Kiekis">
+            </div>
+            <div class="form-group">
+                <label for="service_price"></label>
+                <input name="service_price" type="number" step="any" class="form-control" id="service_price"
+                       placeholder="Kaina">
+            </div>
+            <br>
+            <button type="submit" class="btn btn-primary">Saugoti</button>
+            <a href="{% url 'services' %}" class="btn btn-secondary">Grįžti</a>
+        </form>
+    </div>
+    <style>
+        Input {max-width: 310px;}
+        TextArea {max-width: 310px;}
+    </style>
+
+{% endif %}

@@ -12,6 +12,7 @@ from .forms import AddNewClientForm, AddNewProductForm, AddNewServiceForm, AddNe
 from django.urls import resolve
 from django.shortcuts import render
 
+
 # ---------------------------------------------- LOGIN, LOGOUT, REGISTRATION VIEWS ----------------------------------------------
 # register view
 @csrf_protect
@@ -84,15 +85,18 @@ def login(request):
             return redirect('login')
     return render(request, 'registration/login.html', context)
 
+
 def logged_out(request):
     logout(request)
     return render(request, 'logged_out.html')
+
 
 # ---------------------------------------------- INDEX, CLIENTS, PRODUCTS, SERVICES, INVOICES VIEWS ----------------------------------------------
 
 def index(request):
     context = {}
     return render(request, 'index.html', context)
+
 
 @login_required
 def main_page(request):
@@ -105,6 +109,7 @@ def main_page(request):
     }
 
     return render(request, 'main_page.html', context)
+
 
 # Displays list of clients and has a function to add a new client.
 @login_required
@@ -133,9 +138,25 @@ def clients(request):
             messages.error(request, 'Kliento pridėti nepavyko.')
             return redirect('clients')
 
-
     return render(request, 'clients.html', context)
-    # return render(request, 'clients.html', context, {'current_route': current_route, 'title': 'Klientai'})
+
+
+@login_required
+def add_client(request):
+    if request.method == 'POST':
+        form = AddNewClientForm(request.POST)
+        if form.is_valid:
+            form.save()
+            messages.success(request, 'Klientas pridėtas į klientų sąrašą add client')
+            return redirect('clients')
+        else:
+            messages.error(request, 'Nepavyko')
+            return redirect('add_client')
+        context = {
+            'form': form
+        }
+    return render(request, 'clients.html', context)
+
 
 @login_required
 def products(request):
@@ -157,7 +178,7 @@ def products(request):
         form = AddNewProductForm(request.POST)
         if form.is_valid():
             form.save()
-            messages.success(request, 'Prekės į klientų sąrašą')
+            messages.success(request, 'Prekė pridėta į paslaugų sąrašą')
             return redirect('products')
         else:
             messages.error(request, 'Prekės pridėti nepavyko.')
@@ -165,13 +186,14 @@ def products(request):
 
     return render(request, 'products.html', context)
 
+
 @login_required
 def add_product(request):
     if request.method == 'POST':
-        form = AddNewClientForm(request.POST)
+        form = AddNewProductForm(request.POST)
         if form.is_valid:
             form.save()
-            messages.success(request, 'Prekė pridėta')
+            messages.success(request, 'Prekė pridėta į paslaugų sąrašą add product')
             return redirect('products')
         else:
             messages.error(request, 'Nepavyko')
@@ -202,12 +224,30 @@ def services(request):
         form = AddNewServiceForm(request.POST)
         if form.is_valid():
             form.save()
-            messages.success(request, 'Paslaugos į klientų sąrašą')
+            messages.success(request, 'Paslauga pridėta į paslaugų sąrašą')
             return redirect('services')
         else:
             messages.error(request, 'Paslaugos pridėti nepavyko.')
             return redirect('services')
     return render(request, 'services.html', context)
+
+
+@login_required
+def add_service(request):
+    if request.method == 'POST':
+        form = AddNewServiceForm(request.POST)
+        if form.is_valid:
+            form.save()
+            messages.success(request, 'Paslauga pridėta į paslaugų sąrašą add service')
+            return redirect('services')
+        else:
+            messages.error(request, 'Nepavyko')
+            return redirect('add_service')
+        context = {
+            'form': form
+        }
+    return render(request, 'services.html', context)
+
 
 @login_required
 def invoices(request):

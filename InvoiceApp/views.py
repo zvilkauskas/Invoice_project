@@ -208,18 +208,6 @@ def add_product(request):
 def services(request):
     services = Service.objects.all()
 
-    context = {
-        'services': services,
-        'current_route': resolve(request.path_info).url_name,
-        'title': 'Paslaugos',
-    }
-
-    if request.method == 'GET':
-        form = AddNewProductForm()
-        context['form'] = form
-
-        return render(request, 'main_page.html', context)
-
     if request.method == 'POST':
         form = AddNewServiceForm(request.POST)
         if form.is_valid():
@@ -229,7 +217,17 @@ def services(request):
         else:
             messages.error(request, 'Paslaugos pridėti nepavyko.')
             return redirect('services')
-    return render(request, 'services.html', context)
+
+    else:
+        form = AddNewServiceForm()
+        context = {
+            'services': services,
+            'current_route': resolve(request.path_info).url_name,
+            'title': 'Paslaugos',
+            'form': form
+        }
+
+        return render(request, 'services.html', context)
 
 
 @login_required
@@ -243,12 +241,20 @@ def add_service(request):
         else:
             messages.error(request, 'Nepavyko')
             return redirect('add_service')
-        context = {
-            'form': form
-        }
+
+    form = AddNewServiceForm()
+    context = {
+        'form': form
+    }
     return render(request, 'services.html', context)
 
-
+#if request == post:
+#
+#     cia tikrinam forma
+#
+# else:
+#
+#     duodam tuscia forma nes getas mus nukreipia i formos pildyma
 @login_required
 def invoices(request):
     pass

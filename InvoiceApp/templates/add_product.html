@@ -25,13 +25,14 @@
                 <label for="product_quantity"></label>
                 <input name="product_quantity" type="number" class="form-control" id="product_quantity"
                        placeholder="Kiekis">
+                <small class="form-text text-muted">Iki 150 simbolių.</small>
             </div>
             <div class="form-group">
                 <label for="product_price"></label>
-                <input name="product_price" type="number" step="any" class="form-control" id="product_price"
+                <input name="product_price" type="number" class="form-control" id="product_price"
                        placeholder="Kaina">
+                <small class="form-text text-muted">Iki 150 simbolių.</small>
             </div>
-            <br>
             <button type="submit" class="btn btn-primary">Saugoti</button>
             <a href="{% url 'products' %}" class="btn btn-secondary">Grįžti</a>
         </form>

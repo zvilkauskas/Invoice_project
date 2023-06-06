@@ -28,13 +28,9 @@ class AddNewServiceForm(forms.ModelForm):
         )
 
 class AddNewInvoiceForm(forms.ModelForm):
-
     class Meta:
         model = Invoice
-        fields = (
-            'invoice_name', 'invoice_number', 'due_date', 'payment_terms', 'invoice_status', 'client',
-            'product', 'service',
-        )
+        fields = ('invoice_name', 'invoice_number', 'due_date', 'payment_terms', 'invoice_status',) #'client', 'product', 'service',)
         widgets = {'due_date': forms.DateInput(format='%Y-%m-%d', attrs={'type': 'date'}),}
 
 

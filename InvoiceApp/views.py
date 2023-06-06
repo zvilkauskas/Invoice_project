@@ -12,7 +12,8 @@ from .forms import AddNewClientForm, AddNewProductForm, AddNewServiceForm, AddNe
 from django.urls import resolve
 from django.shortcuts import render
 
-# ---------------------------------------------- LOGIN, LOGOUT, REGISTRATION VIEWS ----------------------------------------------
+
+# ----------------------------------------- LOGIN, LOGOUT, REGISTRATION VIEWS ------------------------------------------
 # register view
 @csrf_protect
 def register(request):
@@ -84,15 +85,23 @@ def login(request):
             return redirect('login')
     return render(request, 'registration/login.html', context)
 
+
 def logged_out(request):
     logout(request)
     return render(request, 'logged_out.html')
 
-# ---------------------------------------------- INDEX, CLIENTS, PRODUCTS, SERVICES, INVOICES VIEWS ----------------------------------------------
+
+def search(request):
+    query = request.GET.get('query')
+    search_results = Client.objects.filter
+
+
+# --------------------------------- INDEX, CLIENTS, PRODUCTS, SERVICES, INVOICES VIEWS ---------------------------------
 
 def index(request):
     context = {}
     return render(request, 'index.html', context)
+
 
 @login_required
 def main_page(request):
@@ -106,95 +115,134 @@ def main_page(request):
 
     return render(request, 'main_page.html', context)
 
-# Displays list of clients and has a function to add a new client.
+
+# Displays list of clients.
 @login_required
 def clients(request):
     clients = Client.objects.all()
-
     context = {
         'clients': clients,
         'current_route': resolve(request.path_info).url_name,
         'title': 'Klientai',
     }
+    return render(request, 'main_page.html', context)
 
-    if request.method == 'GET':
-        form = AddNewClientForm()
-        context['form'] = form
-
-        return render(request, 'main_page.html', context)
-
-    if request.method == 'POST':
-        form = AddNewClientForm(request.POST)
-        if form.is_valid():
-            form.save()
-            messages.success(request, 'Klientas pridėtas į klientų sąrašą')
-            return redirect('clients')
-        else:
-            messages.error(request, 'Kliento pridėti nepavyko.')
-            return redirect('clients')
-
-
-    return render(request, 'clients.html', context)
-    # return render(request, 'clients.html', context, {'current_route': current_route, 'title': 'Klientai'})
 
 @login_required
 def products(request):
     products = Product.objects.all()
-
     context = {
         'products': products,
         'current_route': resolve(request.path_info).url_name,
         'title': 'Prekės',
     }
-
-    if request.method == 'GET':
-        form = AddNewProductForm()
-        context['form'] = form
-
-        return render(request, 'products.html', context)
-
-    if request.method == 'POST':
-        form = AddNewProductForm(request.POST)
-        if form.is_valid():
-            form.save()
-            messages.success(request, 'Prekės į klientų sąrašą')
-            return redirect('products')
-        else:
-            messages.error(request, 'Prekės pridėti nepavyko.')
-            return redirect('products')
-
-    return render(request, 'products.html', context)
+    return render(request, 'main_page.html', context)
 
 
 @login_required
 def services(request):
     services = Service.objects.all()
-
     context = {
         'services': services,
         'current_route': resolve(request.path_info).url_name,
         'title': 'Paslaugos',
     }
+    return render(request, 'main_page.html', context)
 
-    if request.method == 'GET':
-        form = AddNewProductForm()
-        context['form'] = form
-
-        return render(request, 'services.html', context)
-
-    if request.method == 'POST':
-        form = AddNewServiceForm(request.POST)
-        if form.is_valid():
-            form.save()
-            messages.success(request, 'Paslaugos į klientų sąrašą')
-            return redirect('services')
-        else:
-            messages.error(request, 'Paslaugos pridėti nepavyko.')
-            return redirect('services')
-    return render(request, 'services.html', context)
 
 @login_required
 def invoices(request):
-    context = {}
-    return render(request, 'invoices.html', context)
-    pass
+    invoices = Invoice.objects.all()
+    context = {
+        'invoices': invoices,
+        'current_route': resolve(request.path_info).url_name,
+        'title': 'Klientai'
+    }
+    return render(request, 'main_page.html', context)
+
+
+# --------------------------------------- CREATE CLIENT, PRODUCT, SERVICE VIEWS ---------------------------------------
+# Function view to add client.
+@login_required
+def add_client(request):
+    if request.method == 'POST':
+        form = AddNewClientForm(request.POST)
+        if form.is_valid:
+            form.save()
+            messages.success(request, 'Klientas pridėtas')
+            return redirect('clients')
+        else:
+            messages.error(request, 'Nepavyko')
+            return redirect('add_client')
+    else:
+        form = AddNewClientForm()
+        context = {
+            'current_route': resolve(request.path_info).url_name,
+            'title': 'Klientai',
+            'form': form
+        }
+    return render(request, 'main_page.html', context)
+
+
+# Function view to add product.
+@login_required
+def add_product(request):
+    if request.method == 'POST':
+        form = AddNewProductForm(request.POST)
+        if form.is_valid:
+            form.save()
+            messages.success(request, 'Prekė pridėta')
+            return redirect('products')
+        else:
+            messages.error(request, 'Nepavyko')
+            return redirect('add_product')
+    else:
+        form = AddNewProductForm()
+        context = {
+            'current_route': resolve(request.path_info).url_name,
+            'title': 'Prekės',
+            'form': form
+        }
+    return render(request, 'main_page.html', context)
+
+
+# Function view to add service.
+@login_required
+def add_service(request):
+    if request.method == 'POST':
+        form = AddNewServiceForm(request.POST)
+        if form.is_valid:
+            form.save()
+            messages.success(request, 'Paslauga pridėta')
+            return redirect('services')
+        else:
+            messages.error(request, 'Nepavyko')
+            return redirect('add_service')
+    else:
+        form = AddNewServiceForm()
+        context = {
+            'current_route': resolve(request.path_info).url_name,
+            'title': 'Paslaugos',
+            'form': form
+        }
+    return render(request, 'main_page.html', context)
+
+@login_required
+def create_invoice(request):
+    if request.method == 'POST':
+        form = AddNewInvoiceForm(request.POST)
+        if form.is_valid:
+            form.save()
+            messages.success(request, 'Sąskaita išrašyta')
+            return redirect('invoices')
+        else:
+            messages.error(request, 'Nepavyko')
+            return redirect('create_invoice')
+    else:
+        form = AddNewInvoiceForm()
+        context = {
+            'current_route': resolve(request.path_info).url_name,
+            'title': 'Sąskaitos',
+            'form': form
+        }
+    return render(request, 'main_page.html', context)

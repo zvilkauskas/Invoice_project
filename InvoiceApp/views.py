@@ -156,7 +156,7 @@ def invoices(request):
     context = {
         'invoices': invoices,
         'current_route': resolve(request.path_info).url_name,
-        'title': 'Klientai'
+        'title': 'Sąskaitos'
     }
     return render(request, 'main_page.html', context)
 
@@ -229,20 +229,24 @@ def add_service(request):
 
 @login_required
 def create_invoice(request):
-    if request.method == 'POST':
-        form = AddNewInvoiceForm(request.POST)
-        if form.is_valid:
-            form.save()
-            messages.success(request, 'Sąskaita išrašyta')
-            return redirect('invoices')
-        else:
-            messages.error(request, 'Nepavyko')
-            return redirect('create_invoice')
-    else:
-        form = AddNewInvoiceForm()
-        context = {
-            'current_route': resolve(request.path_info).url_name,
-            'title': 'Sąskaitos',
-            'form': form
-        }
-    return render(request, 'main_page.html', context)
+    # if request.method == 'POST':
+    #     form = AddNewInvoiceForm(request.POST)
+    #     if form.is_valid:
+    #         form.save()
+    #         messages.success(request, 'Sąskaita išrašyta')
+    #         return redirect('invoices')
+    #     else:
+    #         messages.error(request, 'Nepavyko')
+    #         return redirect('create_invoice')
+    # else:
+    #     form = AddNewInvoiceForm()
+    #     context = {
+    #         'current_route': resolve(request.path_info).url_name,
+    #         'title': 'Sąskaitos',
+    #         'form': form
+    #     }
+    # return render(request, 'main_page.html', context)
+    #-----------------------------------------------------------------
+    return render(request, 'main_page.html')
+
+

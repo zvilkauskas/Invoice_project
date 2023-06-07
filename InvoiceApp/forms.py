@@ -27,7 +27,7 @@ class AddNewServiceForm(forms.ModelForm):
             'service_name', 'service_code', 'service_description', 'service_quantity', 'service_price',
         )
 
-class AddNewInvoiceForm(forms.ModelForm):
+class CreateNewInvoiceForm(forms.ModelForm):
     class Meta:
         model = Invoice
         fields = ('invoice_name', 'invoice_number', 'due_date', 'payment_terms', 'invoice_status',) #'client', 'product', 'service',)

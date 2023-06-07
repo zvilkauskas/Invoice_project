@@ -1,9 +1,10 @@
 from django.db import models
 from django.contrib.auth.models import User
 # pip install uuid
-import uuid
+from uuid import uuid4
 from django.utils import timezone, dateformat
-from datetime import datetime
+from django.template.defaultfilters import slugify
+from datetime import datetime, date, timedelta
 
 
 class Client(models.Model):
@@ -40,16 +41,6 @@ class Client(models.Model):
         self.last_updated = formatted_date
 
         super(Client, self).save(*args, **kwargs)
-
-    #
-    # def save(self, *args, **kwargs):
-    #
-    #     if self.date_created is None:
-    #         self.date_created = timezone.localtime(timezone.now())
-    #
-    #     self.last_updated = timezone.localtime(timezone.now())
-    #
-    #     super(Client, self).save(*args, **kwargs)
 
     class Meta:
         verbose_name = "Client"
@@ -131,9 +122,25 @@ class Service(models.Model):
 class Invoice(models.Model):
     # Basic data
     invoice_id = models.AutoField(primary_key=True)
-    invoice_name = models.CharField("Pavadinimas", max_length=200, blank=False, null=False)
-    invoice_number = models.IntegerField("Sąskaitos numeris", blank=False, null=False)
-    due_date = models.DateField("Apmokėti iki", blank=False, null=False)
+    invoice_name = models.CharField("Pavadinimas", max_length=200, blank=False, null=False, default='INV')
+
+    # def increment_invoice_number():
+    #     last_invoice = Invoice.objects.all().order_by('invoice_id').last()
+    #     if not last_invoice:
+    #         return '00001'
+    #     invoice_no = last_invoice.invoice_number
+    #     invoice_int = int(invoice_no)
+    #     width = 5
+    #     new_invoice_int = invoice_int + 1
+    #     formatted = (width - len(str(new_invoice_int))) * "0" + str(new_invoice_int)
+    #     new_invoice_number = formatted
+    #     return new_invoice_number
+    #
+    # default=increment_invoice_number,
+
+    invoice_number = models.CharField("Sąskaitos numeris", max_length=10, blank=False, null=False)
+
+    due_date = models.DateField()
     TERMS_OF_PAYMENT = [
         ('1d', '1 diena'),
         ('3d', '3 dienos'),
@@ -157,6 +164,8 @@ class Invoice(models.Model):
     # Additional data
     date_created = models.DateTimeField(verbose_name="Sukurta", blank=True, null=True, default=datetime.now)
     last_updated = models.DateTimeField(verbose_name="Redaguota", blank=True, null=True)
+    unique_id = models.CharField(max_length=100, null=True, blank=True)
+    slug = models.SlugField(max_length=500, unique=True, blank=True, null=True)
 
     def __str__(self):
         return f"{self.invoice_number} {self.invoice_name} {self.due_date} {self.date_created} {self.invoice_status} "
@@ -166,10 +175,21 @@ class Invoice(models.Model):
 
         if self.date_created is None:
             self.date_created = formatted_date
-
         self.last_updated = formatted_date
 
+        if self.unique_id is None:
+            self.unique_id = str(uuid4()).split('-')[4]
+            self.slug = slugify('{} {}'.format(self.invoice_number, self.unique_id))
+        self.slug = slugify('{} {}'.format(self.invoice_number, self.unique_id))
+
         super(Invoice, self).save(*args, **kwargs)
+
+    @property
+    def apmoketi_iki_papildomai(self):
+        reiksme = self.payment_terms.replace('d', '')
+        reiksme_int = int(reiksme)
+        terminas = date.today() + timedelta(days=reiksme_int)
+        return terminas
 
     class Meta:
         verbose_name = "Invoice"

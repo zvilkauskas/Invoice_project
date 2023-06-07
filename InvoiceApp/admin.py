@@ -60,12 +60,16 @@ class InvoiceAdmin(admin.ModelAdmin):
         return obj.last_updated.strftime('%Y-%m-%d, %H:%M')
 
     list_display = (
-        'invoice_id', 'invoice_name', 'invoice_number', 'due_date', 'date_created',
+        'invoice_id', 'invoice_name', 'invoice_number', 'apmoketi_iki_papildomai', 'date_created',
         'invoice_status', 'admin_date_created', 'admin_last_updated'
     )
+    readonly_fields = ('apmoketi_iki_papildomai',)
+    # def apmoketi_iki_papildomai(self, obj):
+    #     return obj.apmoketi_iki_papildomai
 
 
 admin.site.register(Client, ClientAdmin)
 admin.site.register(Product, ProductAdmin)
 admin.site.register(Service, ServiceAdmin)
 admin.site.register(Invoice, InvoiceAdmin)
+

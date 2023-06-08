@@ -8,7 +8,7 @@ from .forms import UserLoginForm
 from django.contrib.auth import logout
 from django.contrib.auth.models import User, auth
 from .models import Client, Product, Service, Invoice
-from .forms import AddNewClientForm, AddNewProductForm, AddNewServiceForm, CreateNewInvoiceForm
+from .forms import AddNewClientForm, AddNewProductForm, AddNewServiceForm, CreateNewInvoiceForm, SelectProductForm
 from django.urls import resolve
 from django.shortcuts import render
 from uuid import uuid4
@@ -93,8 +93,7 @@ def logged_out(request):
 
 
 def search(request):
-    query = request.GET.get('query')
-    search_results = Client.objects.filter
+    pass
 
 
 # --------------------------------- INDEX, CLIENTS, PRODUCTS, SERVICES, INVOICES VIEWS ---------------------------------
@@ -229,38 +228,22 @@ def add_service(request):
     return render(request, 'main_page.html', context)
 
 @login_required
-def create_blank_invoice(request):
-    invoice_number = Invoice.invoice_number
-    # invoice_number = 'INV-'+str(uuid4()).split('-')[1]
-    new_invoice = Invoice.objects.create(invoice_number=invoice_number)
-    new_invoice.save()
-
-    inv = Invoice.objects.get(invoice_number=invoice_number)
-    return redirect('create_full_invoice', slug=inv.slug)
-
-
-@login_required
-def create_full_invoice(request, slug):
-    try:
-        invoice = Invoice.objects.get(slug=slug)
-        pass
-    except:
-        messages.error(request, 'Kažkas nesuveikė')
-
-    context = {
-        'invoice': invoice
-    }
-#change_form = form.save(False)
-# due_date = change_form.due_date
-# result = funkcija_kuri_pakeicia(due_date)
-# change_form.due_date = result
+def create_full_invoice(request):
     if request.method == 'POST':
-        form = CreateNewInvoiceForm(instance=invoice)
-        context = {
-            'form': form
-        }
-        return render(request, 'create_invoice.html', context)
+        invoice_form = CreateNewInvoiceForm(request.POST)
+        if invoice_form.is_valid:
+            invoice_form.save()
+            messages.success(request, 'Sąskaita išsaugota')
+            return redirect('invoices')
+        else:
+            messages.error(request, 'Nepavyko')
+            return redirect('create_full_invoice')
 
-    return render(request, 'create_invoice.html', context)
-
+    invoice_form = CreateNewInvoiceForm()
+    context = {
+        'current_route': resolve(request.path_info).url_name,
+        'title': 'Nauja sąskaita',
+        'invoice_form': invoice_form,
+    }
+    return render(request, 'main_page.html', context)
 

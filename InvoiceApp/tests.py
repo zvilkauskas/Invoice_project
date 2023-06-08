@@ -15,7 +15,7 @@
 # u = User.objects.get(id=1)
 
 from datetime import date, timedelta
-reiksme = '7d'
+reiksme = '30d'
 reiksme_pakeista = reiksme.replace('d', '')
 reiksme_int = int(reiksme_pakeista)
 terminas = date.today() + timedelta(days=reiksme_int)

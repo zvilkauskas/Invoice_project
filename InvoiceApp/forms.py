@@ -30,8 +30,8 @@ class AddNewServiceForm(forms.ModelForm):
 class CreateNewInvoiceForm(forms.ModelForm):
     class Meta:
         model = Invoice
-        fields = ('invoice_name', 'invoice_number', 'due_date', 'payment_terms', 'invoice_status',) #'client', 'product', 'service',)
-        widgets = {'due_date': forms.DateInput(format='%Y-%m-%d', attrs={'type': 'date'}),}
+        fields = ('invoice_name', 'invoice_number', 'payment_terms', 'invoice_status', 'client', 'product', 'service',)
+        #widgets = {'due_date': forms.HiddenInput()}
 
 
 
@@ -45,3 +45,9 @@ class UserLoginForm(forms.ModelForm):
         fields = (
             'email', 'password',
         )
+
+
+class SelectProductForm(forms.ModelForm):
+    class Meta:
+        model = Product
+        fields = ['product_name', 'product_code',]

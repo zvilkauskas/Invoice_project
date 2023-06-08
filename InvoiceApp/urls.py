@@ -15,6 +15,6 @@ urlpatterns = [
     path('services/', views.services, name='services'),
     path('services/add_service/', views.add_service, name='add_service'),
     path('invoices/', views.invoices, name='invoices'),
-    path('invoices/create_blank_invoice/', views.create_blank_invoice, name='create_blank_invoice'),
-    path('invoices/create_full_invoice/<slug:slug>', views.create_full_invoice, name='create_full_invoice')
+    # path('invoices/create_blank_invoice/', views.create_blank_invoice, name='create_blank_invoice'),
+    path('invoices/create_full_invoice/', views.create_full_invoice, name='create_full_invoice')
 ]

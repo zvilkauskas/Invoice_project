@@ -33,13 +33,14 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'InvoiceApp',
+    'crispy_forms',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'InvoiceApp',
 ]
 
 MIDDLEWARE = [
@@ -133,3 +134,5 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 LOGIN_REDIRECT_URL = 'main_page'
 LOGIN_URL = 'login'
 LOGOUT_REDIRECT_URL = "logged_out"
+
+CRISPY_TEMPLATE_PACK = 'bootstrap5'

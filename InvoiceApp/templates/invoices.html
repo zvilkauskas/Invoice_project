@@ -1,7 +1,7 @@
 {% if user.is_authenticated %}
 {% csrf_token %}
         <div>
-            <a href="{% url 'create_blank_invoice' %}" class="btn btn-primary">Ruošti sąskaitą</a>
+            <a href="{% url 'create_full_invoice' %}" class="btn btn-primary">Ruošti sąskaitą</a>
         </div>
 
         <div class="table-responsive">
@@ -23,7 +23,7 @@
                     <td>{{ invoice.client.client_name }}</td>
                     <td>{{ invoice.date_created }}</td>
                     <td>{{ invoice.due_date }}</td>
-                    <td>{{ invoice.invoice_status }}</td>
+                    <td>{{ invoice.get_invoice_status_display }}</td>
                 </tr>
                 {% endfor %}
                 </tbody>

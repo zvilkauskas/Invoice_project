@@ -119,28 +119,29 @@ class Service(models.Model):
         verbose_name_plural = "Services"
 
 
+
+
 class Invoice(models.Model):
     # Basic data
     invoice_id = models.AutoField(primary_key=True)
-    invoice_name = models.CharField("Pavadinimas", max_length=200, blank=False, null=False, default='INV')
+    invoice_name = models.CharField("Serija", max_length=200, blank=True, null=True, default='INV')
 
-    # def increment_invoice_number():
-    #     last_invoice = Invoice.objects.all().order_by('invoice_id').last()
-    #     if not last_invoice:
-    #         return '00001'
-    #     invoice_no = last_invoice.invoice_number
-    #     invoice_int = int(invoice_no)
-    #     width = 5
-    #     new_invoice_int = invoice_int + 1
-    #     formatted = (width - len(str(new_invoice_int))) * "0" + str(new_invoice_int)
-    #     new_invoice_number = formatted
-    #     return new_invoice_number
-    #
-    # default=increment_invoice_number,
+    def increment_invoice_number():
+        # jeigu numeris butu keiciamas ranka, 'invoice_id' pakeisti i order_by('invoice_number')
+        last_invoice = Invoice.objects.all().order_by('invoice_id').last()
+        if not last_invoice:
+            return '00001'
+        invoice_no = last_invoice.invoice_number
+        invoice_int = int(invoice_no)
+        width = 5
+        new_invoice_int = invoice_int + 1
+        formatted = (width - len(str(new_invoice_int))) * "0" + str(new_invoice_int)
+        new_invoice_number = formatted
+        return new_invoice_number
 
-    invoice_number = models.CharField("Sąskaitos numeris", max_length=10, blank=False, null=False)
+    invoice_number = models.CharField("Sąskaitos numeris", default=increment_invoice_number, max_length=10, blank=True, null=True)
 
-    due_date = models.DateField()
+    due_date = models.DateField("Apmokėti iki", blank=True, null=True)
     TERMS_OF_PAYMENT = [
         ('1d', '1 diena'),
         ('3d', '3 dienos'),
@@ -150,13 +151,13 @@ class Invoice(models.Model):
         ('30d', '30 dienų'),
         ('60d', '60 dienų'),
     ]
-    payment_terms = models.CharField(max_length=10, blank=False, null=False, choices=TERMS_OF_PAYMENT, default='30d')
+    payment_terms = models.CharField(max_length=10, blank=True, null=True, choices=TERMS_OF_PAYMENT, default='30d')
     STATUS_OF_INVOICE = [
         ('l', 'Laukiama apmokėjimo'),
         ('a', 'Apmokėta'),
         ('p', 'Pradelsta'),
     ]
-    invoice_status = models.CharField(max_length=20, blank=False, null=False, choices=STATUS_OF_INVOICE, default='l')
+    invoice_status = models.CharField(max_length=20, blank=True, null=True, choices=STATUS_OF_INVOICE, default='l')
     # Related data
     client = models.ForeignKey(Client, on_delete=models.SET_NULL, blank=True, null=True)
     product = models.ForeignKey(Product, on_delete=models.SET_NULL, blank=True, null=True)
@@ -164,8 +165,6 @@ class Invoice(models.Model):
     # Additional data
     date_created = models.DateTimeField(verbose_name="Sukurta", blank=True, null=True, default=datetime.now)
     last_updated = models.DateTimeField(verbose_name="Redaguota", blank=True, null=True)
-    unique_id = models.CharField(max_length=100, null=True, blank=True)
-    slug = models.SlugField(max_length=500, unique=True, blank=True, null=True)
 
     def __str__(self):
         return f"{self.invoice_number} {self.invoice_name} {self.due_date} {self.date_created} {self.invoice_status} "
@@ -177,14 +176,11 @@ class Invoice(models.Model):
             self.date_created = formatted_date
         self.last_updated = formatted_date
 
-        if self.unique_id is None:
-            self.unique_id = str(uuid4()).split('-')[4]
-            self.slug = slugify('{} {}'.format(self.invoice_number, self.unique_id))
-        self.slug = slugify('{} {}'.format(self.invoice_number, self.unique_id))
+        self.due_date = self.apmoketi_iki_papildomai()
 
         super(Invoice, self).save(*args, **kwargs)
 
-    @property
+
     def apmoketi_iki_papildomai(self):
         reiksme = self.payment_terms.replace('d', '')
         reiksme_int = int(reiksme)

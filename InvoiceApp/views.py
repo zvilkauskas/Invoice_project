@@ -240,10 +240,14 @@ def create_full_invoice(request):
             return redirect('create_invoice')
 
     invoice_form = CreateNewInvoiceForm()
+    all_products = Product.objects.all()
+    all_services = Service.objects.all()
     context = {
         'current_route': resolve(request.path_info).url_name,
         'title': 'Nauja sąskaita',
         'invoice_form': invoice_form,
+        'all_products': all_products,
+        'all_services': all_services
     }
     return render(request, 'main_page.html', context)
 

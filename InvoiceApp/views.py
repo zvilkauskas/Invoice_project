@@ -237,7 +237,7 @@ def create_full_invoice(request):
             return redirect('invoices')
         else:
             messages.error(request, 'Nepavyko')
-            return redirect('create_full_invoice')
+            return redirect('create_invoice')
 
     invoice_form = CreateNewInvoiceForm()
     context = {

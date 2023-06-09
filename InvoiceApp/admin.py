@@ -59,17 +59,17 @@ class InvoiceAdmin(admin.ModelAdmin):
     def admin_last_updated(self, obj):
         return obj.last_updated.strftime('%Y-%m-%d, %H:%M')
 
+    @admin.display(description='Apmokėti iki')
+    def admin_due_date(self, obj):
+        return obj.due_date.strftime('%Y-%m-%d')
+
     list_display = (
-        'invoice_id', 'invoice_name', 'invoice_number', 'apmoketi_iki_papildomai', 'date_created',
-        'invoice_status', 'admin_date_created', 'admin_last_updated'
+        'invoice_id', 'invoice_name', 'invoice_number', 'admin_date_created',
+        'admin_due_date', 'admin_last_updated', 'invoice_status',
     )
-    readonly_fields = ('apmoketi_iki_papildomai',)
-    # def apmoketi_iki_papildomai(self, obj):
-    #     return obj.apmoketi_iki_papildomai
 
 
 admin.site.register(Client, ClientAdmin)
 admin.site.register(Product, ProductAdmin)
 admin.site.register(Service, ServiceAdmin)
 admin.site.register(Invoice, InvoiceAdmin)
-

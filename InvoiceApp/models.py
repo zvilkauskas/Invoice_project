@@ -1,9 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
-# pip install uuid
-from uuid import uuid4
 from django.utils import timezone, dateformat
-from django.template.defaultfilters import slugify
 from datetime import datetime, date, timedelta
 
 
@@ -119,8 +116,6 @@ class Service(models.Model):
         verbose_name_plural = "Services"
 
 
-
-
 class Invoice(models.Model):
     # Basic data
     invoice_id = models.AutoField(primary_key=True)
@@ -139,9 +134,10 @@ class Invoice(models.Model):
         new_invoice_number = formatted
         return new_invoice_number
 
-    invoice_number = models.CharField("Sąskaitos numeris", default=increment_invoice_number, max_length=10, blank=True, null=True)
+    invoice_number = models.CharField("Sąskaitos numeris", default=increment_invoice_number, max_length=10, blank=True,
+                                      null=True)
 
-    due_date = models.DateField("Apmokėti iki", blank=True, null=True)
+    due_date = models.DateField(verbose_name="Apmokėti iki", blank=True, null=True)
     TERMS_OF_PAYMENT = [
         ('1d', '1 diena'),
         ('3d', '3 dienos'),
@@ -175,11 +171,10 @@ class Invoice(models.Model):
         if self.date_created is None:
             self.date_created = formatted_date
         self.last_updated = formatted_date
-
+        self.due_date = formatted_date
         self.due_date = self.apmoketi_iki_papildomai()
 
         super(Invoice, self).save(*args, **kwargs)
-
 
     def apmoketi_iki_papildomai(self):
         reiksme = self.payment_terms.replace('d', '')

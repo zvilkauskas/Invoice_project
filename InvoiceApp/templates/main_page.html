@@ -39,10 +39,7 @@
     {% elif current_route == 'invoices' %}
         {% include "invoices.html" %}
 
-    {% elif current_route == 'create_blank_invoice' %}
-        {% include "create_invoice.html" %}
-
-    {% elif current_route == 'create_full_invoice' %}
+    {% elif current_route == 'create_invoice' %}
         {% include "create_invoice.html" %}
 
     {% endif %}

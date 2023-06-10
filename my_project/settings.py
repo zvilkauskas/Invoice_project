@@ -35,6 +35,7 @@ ALLOWED_HOSTS = []
 INSTALLED_APPS = [
     'InvoiceApp',
     'crispy_forms',
+    'crispy_bootstrap4',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -135,4 +136,5 @@ LOGIN_REDIRECT_URL = 'main_page'
 LOGIN_URL = 'login'
 LOGOUT_REDIRECT_URL = "logged_out"
 
-CRISPY_TEMPLATE_PACK = 'bootstrap5'
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
+# CRISPY_TEMPLATE_PACK = 'uni_form'

@@ -240,6 +240,7 @@ def create_full_invoice(request):
             return redirect('create_invoice')
 
     invoice_form = CreateNewInvoiceForm()
+    select_product = SelectProductForm()
     all_products = Product.objects.all()
     all_services = Service.objects.all()
     context = {
@@ -247,7 +248,8 @@ def create_full_invoice(request):
         'title': 'Nauja sąskaita',
         'invoice_form': invoice_form,
         'all_products': all_products,
-        'all_services': all_services
+        'all_services': all_services,
+        'select_product': select_product
     }
     return render(request, 'main_page.html', context)
 

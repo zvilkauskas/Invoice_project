@@ -1,106 +1,144 @@
-
 {% load static%}
 
 {% if user.is_authenticated %}
 
 {% load crispy_forms_tags %}
+
 <body>
-    <link href="{% static 'css/input-width.css' %}" rel="stylesheet">
-    <link href="{% static 'css/dropdown.css' %}" rel="stylesheet">
+<link href="{% static 'css/input-width.css' %}" rel="stylesheet">
+<link href="{% static 'css/dropdown.css' %}" rel="stylesheet">
+<link href="{% static 'css/short_field.css' %}" rel="stylesheet">
 
-<!-- <div class="dropdown">-->
-<!--  <button onclick="myFunction()" class="dropbtn">Dropdown</button>-->
-<!--  <div id="myDropdown" class="dropdown-content">-->
-<!--    <input type="text" placeholder="Search.." id="myInput" onkeyup="filterFunction()">-->
-<!--    <a href="#about">About</a>-->
-<!--    <a href="#base">Base</a>-->
-<!--    <a href="#blog">Blog</a>-->
-<!--    <a href="#contact">Contact</a>-->
-<!--    <a href="#custom">Custom</a>-->
-<!--    <a href="#support">Support</a>-->
-<!--    <a href="#tools">Tools</a>-->
-<!--  </div>-->
-<!--</div>-->
 
-    <div class="content-section">
-        <form method="POST">
-            {% csrf_token %}
-            <fieldset class="form-group" style="width: 300px;">
-                <legend class="border-bottom mb-4">New book with function</legend>
-                {{ select_product|crispy }}
-            </fieldset>
-            <div class="form-group">
-                <button class="btn btn-outline-info" type="submit">Save</button>
-            </div>
-        </form>
-    </div>
+<select name="select-box2" class="form-select short_input" id="select-box2">
+    <option selected disabled="true" value="">Pasirinkite prekę...</option>
 
-    <div class="content-section">
+    {% for product in all_products %}
+    <option
+            value="{{ product.product_id }}"
+            data-name="{{ product.product_name }}"
+            data-description="{{ product.product_description }}"
+            data-price="{{ product.product_price}}"
+            >{{ product.product_name }}</option>
+    {% endfor %}
+</select>
+
+<!--<button type="button" class="btn btn-primary" data-bs-toggle="modal">Pridėti prekę</button>-->
+
+<div class="table-responsive product-list-table" id="product-table">
+    <table class="table table-striped table-sm">
+        <thead>
+        <tr>
+            <th>Pavadinimas</th>
+            <th>Aprašymas</th>
+            <th>Kiekis</th>
+            <th>Kaina</th>
+            <th>Suma</th>
+        </tr>
+        </thead>
+        <tbody>
+
+        </tbody>
+    </table>
+</div>
+
+
+<select name="select-box3" class="form-select short_input" id="select-box3">
+    <option selected disabled="true" value="">Pasirinkite paslaugą...</option>
+
+    {% for service in all_services %}
+    <option
+            value="{{ service.service_id }}"
+            data-name="{{ service.service_name }}"
+            data-description="{{ service.service_description }}"
+            data-price="{{ service.service_price}}"
+            >{{ service.service_name }}</option>
+    {% endfor %}
+</select>
+
+<div class="table-responsive service-list-table" id="service-table">
+    <table class="table table-striped table-sm">
+        <thead>
+        <tr>
+            <th>Pavadinimas</th>
+            <th>Aprašymas</th>
+            <th>Kiekis</th>
+            <th>Kaina</th>
+            <th>Suma</th>
+        </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+</div>
+
+
+<div class="content-section">
     <form method="POST">
         {% csrf_token %}
         <fieldset class="form-group" style="width: 300px;">
             <legend class="border-bottom mb-4">Testing</legend>
-            {{ invoice_form }}
+            {{ invoice_form|crispy }}
         </fieldset>
+        <br>
         <div class="form-group">
-            <button class="btn btn-outline-info" type="submit">Save</button>
+            <button class="btn btn-primary" type="submit">Išsaugoti</button>
+            <a href="{% url 'invoices' %}" class="btn btn-secondary">Grįžti</a>
         </div>
     </form>
-    </div>
+</div>
 
 
-      <div class="card-body">
 
-        <div class="row">
-          <div class="col-lg-12">
-            <h5 class="card-title">Pridėti prekių į sąskaitą</h5><br>
-              <select name="select-box" class="form-select" id="select-box">
-                <option selected disabled="true" value="">Pasirinkite prekę...</option>
+<!--<script>-->
+<!--$(".product-list-table").hide();-->
+<!--$(document).ready(function(){-->
+<!--$(document).on('change keyup', '.quantity', function() {-->
+<!--        var quantity = $(this).attr('id')-->
+<!--        var priceId = '#'+ $(this).attr("id").replace("quantity", "price");-->
+<!--        var price = $(priceId).text();-->
+<!--        var sum = '#'+ $(this).attr("id").replace("quantity", "sum");-->
+<!--        var newPrice = parseFloat(price) * parseFloat($(this).val());-->
+<!--        $(sum).text(newPrice);-->
+<!--    });-->
 
-                {% for product in all_products %}
-                <option value="{{ product.product_name }}">{{ product.product_name }}</option>
-                {% endfor %}
+<!--    $('#select-box2').on('change', function(){-->
+<!--        $(".product-list-table").show();-->
+<!--        let id = $(this).find(":selected").val();-->
 
-              </select>
-              <button href="#" type="button" class="btn btn-primary" data-bs-toggle="modal">Pridėti prekę</button>
-
-              <div>
-                <input list="all_products" name="all_products">
-                <datalist class="SmallFormField" name="all_products" id="all_products" onChange="submitForm(this.form, true)" onkeypress="gblKeyPress()" onkeydown="gblKeyDown()" onfocus="gblOnFocus('all_products')" onblur="gblOnBlur()" onClick="gblOnClick('QuoteMgrSearchCriteria', this.form)">
-                <option value="">Pasirinkite prekę...</option>
-                {% for product in all_products %}
-                <option value="{{ product.product_name }}">{{ product.product_name }}</option>
-                {% endfor %}
-                <input class="btn btn-primary" value="Submit">
-              </div>
-
-            <div class="table-responsive">
-              <table class="table table-striped table-sm">
-                <thead>
-                  <tr>
-                    <th>Pvadinimas</th>
-                    <th>Aprašymas</th>
-                    <th>Kiekis</th>
-                    <th>Kaina</th>
-                    <th>Suma</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {% for product in all_products %}
-                <tr>
-                  <td>{{product.title}}</td>
-                  <td>{{product.description}}</td>
-                  <td>{{product.quantity}}</td>
-                  <td>{{product.price}}</td>
-                </tr>
-                  {% endfor %}
-                </tbody>
-              </table>
-            </div>
-
-          </div>
-        </div>
-      </div>
-      <script src="{% static 'js/dropdown.js' %}"></script>
+<!--  $("#product-table").find('tbody')-->
+<!--    .append($('<tr>')-->
+<!--        .append($('<td>')-->
+<!--            .append($('<p>')-->
+<!--                .text($(this).find(":selected").data('name'))-->
+<!--            )-->
+<!--        )-->
+<!--         .append($('<td>')-->
+<!--            .append($('<p>')-->
+<!--                .text($(this).find(":selected").data('description'))-->
+<!--            )-->
+<!--        )-->
+<!--         .append($('<td>')-->
+<!--            .append($('<input type="text" class="quantity">')-->
+<!--                .text('0').attr('id', 'quantity'+id)-->
+<!--            )-->
+<!--        )-->
+<!--         .append($('<td>')-->
+<!--            .append($('<p>')-->
+<!--                .text($(this).find(":selected").data('price')).attr('id', 'price'+id)-->
+<!--            )-->
+<!--        )-->
+<!--         .append($('<td>')-->
+<!--            .append($('<p class="sum">')-->
+<!--                .text('0').attr('id', 'sum'+id)-->
+<!--            )-->
+<!--        )-->
+<!--    );-->
+<!--    });-->
+<!--});-->
+<!--</script>-->
+<script src="{% static 'js/dropdown.js' %}"></script>
+<script src="{% static 'js/product_price_calc.js' %}"></script>
+<script src="{% static 'js/service_price_calc.js' %}"></script>
 </body>
 {% endif %}

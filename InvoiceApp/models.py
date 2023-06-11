@@ -139,15 +139,15 @@ class Invoice(models.Model):
 
     due_date = models.DateField(verbose_name="Apmokėti iki", blank=True, null=True)
     TERMS_OF_PAYMENT = [
-        ('1d', '1 diena'),
-        ('3d', '3 dienos'),
-        ('5d', '5 dienos'),
-        ('7d', '7 dienos'),
-        ('14d', '14 dienų'),
-        ('30d', '30 dienų'),
-        ('60d', '60 dienų'),
+        ('1', '1 diena'),
+        ('3', '3 dienos'),
+        ('5', '5 dienos'),
+        ('7', '7 dienos'),
+        ('14', '14 dienų'),
+        ('30', '30 dienų'),
+        ('60', '60 dienų'),
     ]
-    payment_terms = models.CharField(max_length=10, blank=True, null=True, choices=TERMS_OF_PAYMENT, default='30d')
+    payment_terms = models.CharField(max_length=10, blank=True, null=True, choices=TERMS_OF_PAYMENT, default='30')
     STATUS_OF_INVOICE = [
         ('l', 'Laukiama apmokėjimo'),
         ('a', 'Apmokėta'),
@@ -177,9 +177,9 @@ class Invoice(models.Model):
         super(Invoice, self).save(*args, **kwargs)
 
     def apmoketi_iki_papildomai(self):
-        reiksme = self.payment_terms.replace('d', '')
-        reiksme_int = int(reiksme)
-        terminas = date.today() + timedelta(days=reiksme_int)
+        reiksme = int(self.payment_terms)
+
+        terminas = date.today() + timedelta(days=reiksme)
         return terminas
 
     class Meta:

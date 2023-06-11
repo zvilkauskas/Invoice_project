@@ -8,7 +8,7 @@ from .forms import UserLoginForm
 from django.contrib.auth import logout
 from django.contrib.auth.models import User, auth
 from .models import Client, Product, Service, Invoice
-from .forms import AddNewClientForm, AddNewProductForm, AddNewServiceForm, CreateNewInvoiceForm, SelectProductForm
+from .forms import AddNewClientForm, AddNewProductForm, AddNewServiceForm, CreateNewInvoiceForm, SelectProductForm, SelectClientForm
 from django.urls import resolve
 from django.shortcuts import render
 from uuid import uuid4
@@ -241,15 +241,18 @@ def create_full_invoice(request):
 
     invoice_form = CreateNewInvoiceForm()
     select_product = SelectProductForm()
+    select_client = SelectClientForm()
     all_products = Product.objects.all()
     all_services = Service.objects.all()
+
     context = {
         'current_route': resolve(request.path_info).url_name,
         'title': 'Nauja sąskaita',
         'invoice_form': invoice_form,
+        'select_product': select_product,
+        'select_client': select_client,
         'all_products': all_products,
         'all_services': all_services,
-        'select_product': select_product
     }
     return render(request, 'main_page.html', context)
 

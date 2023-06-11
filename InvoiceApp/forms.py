@@ -1,6 +1,7 @@
 from django import forms
 from django.contrib.auth.models import User
 from .models import Client, Product, Service, Invoice
+from django_select2 import forms as s2forms
 
 
 class DateInputForm(forms.ModelForm):
@@ -30,7 +31,7 @@ class AddNewServiceForm(forms.ModelForm):
 class CreateNewInvoiceForm(forms.ModelForm):
     class Meta:
         model = Invoice
-        fields = ('invoice_name', 'invoice_number', 'payment_terms', 'invoice_status', 'client', 'product', 'service',)
+        fields = ('invoice_name', 'invoice_number', 'payment_terms', 'invoice_status',)# 'client', 'product', 'service',)
         #widgets = {'due_date': forms.HiddenInput()}
 
 
@@ -47,7 +48,13 @@ class UserLoginForm(forms.ModelForm):
         )
 
 
-class SelectProductForm(forms.ModelForm):
+class SelectProductForm(s2forms.ModelSelect2Widget):
     class Meta:
         model = Product
-        fields = ['product_name', 'product_code',]
+        fields = ['product_name']
+
+
+class SelectClientForm(forms.ModelForm):
+    class Meta:
+        model = Invoice
+        fields = ['client']

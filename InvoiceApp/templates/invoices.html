@@ -1,5 +1,21 @@
 {% if user.is_authenticated %}
 {% csrf_token %}
+<body>
+
+{% if messages %}
+  {% for message in messages %}
+    {% if message.tags == 'error' %}
+      <div class="alert alert-danger">
+        {{ message }}
+      </div>
+    {% else %}
+      <div class="alert alert-{{ message.tags }}">
+        {{ message }}
+      </div>
+    {% endif %}
+  {% endfor %}
+{% endif %}
+
         <div>
             <a href="{% url 'create_invoice' %}" class="btn btn-primary">Ruošti sąskaitą</a>
         </div>
@@ -13,6 +29,7 @@
                         <th scope="col">Išrašymo data</th>
                         <th scope="col">Apmokėti iki</th>
                         <th scope="col">Būklė</th>
+                        <th scope="col">Sąskaitos suma</th>
                     </tr>
                 </thead>
 
@@ -29,4 +46,5 @@
                 </tbody>
             </table>
         </div>
+</body>
 {% endif %}

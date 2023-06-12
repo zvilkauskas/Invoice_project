@@ -11,37 +11,45 @@ $(document).on('change keyup', '.service_quantity', function() {
         $(sum).text(newPrice);
     });
 
+    $(document).on('click', '.delete', function () {
+        var row = $(this).data('row');
+        $(this).closest('tr').remove();
+    });
+
     $('#select-box3').on('change', function(){
         $(".service-list-table").show();
         let id = $(this).find(":selected").val();
 
-  $("#service-table").find('tbody')
-    .append($('<tr>')
-        .append($('<td>')
-            .append($('<p>')
-                .text($(this).find(":selected").data('name'))
-            )
-        )
-         .append($('<td>')
-            .append($('<p>')
-                .text($(this).find(":selected").data('description'))
-            )
-        )
-         .append($('<td>')
-            .append($('<input type="text" class="service_quantity">')
-                .text('0').attr('id', 'service_quantity'+id)
-            )
-        )
-         .append($('<td>')
-            .append($('<p>')
-                .text($(this).find(":selected").data('price')).attr('id', 'service_price'+id)
-            )
-        )
-         .append($('<td>')
-            .append($('<p class="service_sum">')
-                .text('0').attr('id', 'service_sum'+id)
-            )
-        )
-    );
+        $("#service-table").find('tbody')
+            .append($('<tr>')
+                .append($('<td>')
+                    .append($('<p>')
+                        .text($(this).find(":selected").data('name'))
+                    )
+                )
+                 .append($('<td>')
+                    .append($('<p>')
+                        .text($(this).find(":selected").data('description'))
+                    )
+                )
+                 .append($('<td>')
+                    .append($('<input type="text" class="service_quantity">')
+                        .text('0').attr('id', 'service_quantity'+id)
+                    )
+                )
+                 .append($('<td>')
+                    .append($('<p>')
+                        .text($(this).find(":selected").data('price')).attr('id', 'service_price'+id)
+                    )
+                )
+                 .append($('<td>')
+                    .append($('<p class="service_sum">')
+                        .text('0').attr('id', 'service_sum'+id)
+                    )
+                )
+                .append($('<td>')
+                    .append($('<a class="delete btn btn-danger" data-row="' + id + '">Trinti</a>'))
+                )
+            );
     });
 });

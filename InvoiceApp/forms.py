@@ -1,11 +1,11 @@
 from django import forms
 from django.contrib.auth.models import User
 from .models import Client, Product, Service, Invoice
-from django_select2 import forms as s2forms
 
 
 class DateInputForm(forms.ModelForm):
     input_type = 'date'
+
 
 class AddNewClientForm(forms.ModelForm):
     class Meta:
@@ -14,12 +14,14 @@ class AddNewClientForm(forms.ModelForm):
             'client_name', 'registration_number', 'vat_number', 'address', 'email_address', 'phone_number',
         )
 
+
 class AddNewProductForm(forms.ModelForm):
     class Meta:
         model = Product
         fields = (
             'product_name', 'product_code', 'product_description', 'product_quantity', 'product_price',
         )
+
 
 class AddNewServiceForm(forms.ModelForm):
     class Meta:
@@ -28,22 +30,32 @@ class AddNewServiceForm(forms.ModelForm):
             'service_name', 'service_code', 'service_description', 'service_quantity', 'service_price',
         )
 
+
 class CreateNewInvoiceForm(forms.ModelForm):
     class Meta:
         model = Invoice
-        fields = ('invoice_name', 'invoice_number', 'payment_terms', 'invoice_status', 'client')#, 'product', 'service',)
+        fields = ('invoice_name', 'invoice_number', 'payment_terms', 'invoice_status', 'client',
+                  'invoice_total')  # , 'product', 'service',)
+        widgets = {
+            'invoice_total': forms.NumberInput(attrs={
+                'class': 'totalSum',
+                'name': 'total_price',
+                'readonly': True
+            })
+        }
+
+        # {{form.field_name}}
 
 
-
-# type="email" class="form-control" id="floatingInput" placeholder="name@example.com"
 class UserLoginForm(forms.ModelForm):
-    # username = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control mb-3', 'id': 'floatingInput', 'for':"floatingInput"}), required=True)
-    # password = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'form-control mb-3', 'id': 'floatingPassword'}), required=True)
-
     class Meta:
         model = User
         fields = (
             'email', 'password',
         )
 
-
+class EditInvoiceForm(forms.ModelForm):
+    class Meta:
+        model = Invoice
+        fields = ('invoice_name', 'invoice_number', 'payment_terms', 'invoice_status', 'client',
+                  'invoice_total')

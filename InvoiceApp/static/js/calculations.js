@@ -10,6 +10,7 @@ $(document).ready(function () {
         var newPrice = parseFloat(price) * parseFloat($(this).val());
         $(sum).text(newPrice);
         calculateTotal()
+        getName()
     });
 
 
@@ -27,7 +28,7 @@ $(document).ready(function () {
         $("#product-table").find('tbody')
             .append($('<tr>')
                 .append($('<td>')
-                    .append($('<p>')
+                    .append($('<p class="product_name">')
                         .text($(this).find(":selected").data('name'))
                     )
                 )
@@ -70,6 +71,7 @@ $(document).ready(function(){
         var newPrice = parseFloat(price) * parseFloat($(this).val());
         $(sum).text(newPrice);
         calculateTotal()
+        getName()
     });
 
     $(document).on('click', '.delete', function () {
@@ -85,7 +87,7 @@ $(document).ready(function(){
         $("#service-table").find('tbody')
             .append($('<tr>')
                 .append($('<td>')
-                    .append($('<p>')
+                    .append($('<p class="service_name">')
                         .text($(this).find(":selected").data('name'))
                     )
                 )
@@ -116,11 +118,7 @@ $(document).ready(function(){
     });
 });
 
-//$(".totalSum").hide();
-$(".hide-show").hide();
 function calculateTotal() {
-//    $(".totalSum").show();
-    $(".hide-show").show();
     var sum = 0;
 
     $('.sum, .service_sum').each(function() {
@@ -133,5 +131,16 @@ function calculateTotal() {
 
     $('.totalSum').val(sum.toFixed(2));
 }
+
+function getName() {
+    var objects = []
+    $('.product_name, .service_name').each(function() {
+       var value = $(this).text();
+       objects.push(value);
+    })
+
+    $('.invoiceProducts').val(objects);
+}
+
 
 

@@ -8,7 +8,7 @@ from .forms import UserLoginForm
 from django.contrib.auth import logout
 from django.contrib.auth.models import User, auth
 from .models import Client, Product, Service, Invoice
-from .forms import AddNewClientForm, AddNewProductForm, AddNewServiceForm, CreateNewInvoiceForm
+from .forms import AddNewClientForm, AddNewProductForm, AddNewServiceForm, CreateNewInvoiceForm, EditInvoiceForm
 from django.urls import resolve
 from django.shortcuts import render
 from uuid import uuid4
@@ -230,15 +230,12 @@ def add_service(request):
 @login_required
 def create_full_invoice(request):
     if request.method == 'POST':
-        total_invoice_sum = request.POST.get('total_price')
-        print(total_invoice_sum)
-        print(type(total_invoice_sum))
 
         invoice_form = CreateNewInvoiceForm(request.POST)
-        # if invoice_form.is_valid:
-        #     invoice_form.save()
-        #     messages.success(request, 'Sąskaita išsaugota')
-        #     return redirect('invoices')
+        if invoice_form.is_valid():
+            invoice_form.save()
+            messages.success(request, 'Sąskaita išsaugota')
+            return redirect('invoices')
         # else:
         #     messages.error(request, 'Nepavyko')
         #     return redirect('create_invoice')
@@ -255,4 +252,21 @@ def create_full_invoice(request):
         'all_services': all_services,
     }
     return render(request, 'main_page.html', context)
+
+@login_required
+def edit_invoice(request, pk):
+    invoice = Invoice.objects.get(invoice_id=pk)
+    if request.method == 'POST':
+        form = EditInvoiceForm(data=request.POST, instance=invoice)
+        if form.is_valid():
+            change_form = form.save(False)
+            change_form.save()
+            return redirect('edit_invoice')
+        else:
+            form = EditInvoiceForm(instance=invoice)
+    context = {
+        'form': form
+    }
+    return render(request, 'main_page.html', context)
+    pass
 

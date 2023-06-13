@@ -16,5 +16,5 @@ urlpatterns = [
     path('services/add_service/', views.add_service, name='add_service'),
     path('invoices/', views.invoices, name='invoices'),
     path('invoices/create_invoice/', views.create_full_invoice, name='create_invoice'),
-    path("invoices/", include("django_select2.urls")),
+
 ]

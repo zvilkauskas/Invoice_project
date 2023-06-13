@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.utils import timezone, dateformat
 from datetime import datetime, date, timedelta
+from django.core.validators import MinValueValidator
 
 
 class Client(models.Model):
@@ -147,17 +148,18 @@ class Invoice(models.Model):
         ('30', '30 dienų'),
         ('60', '60 dienų'),
     ]
-    payment_terms = models.CharField(max_length=10, blank=True, null=True, choices=TERMS_OF_PAYMENT, default='30')
+    payment_terms = models.CharField(verbose_name="Apmokėjimo terminas", max_length=10, blank=True, null=True, choices=TERMS_OF_PAYMENT, default='30')
     STATUS_OF_INVOICE = [
         ('l', 'Laukiama apmokėjimo'),
         ('a', 'Apmokėta'),
         ('p', 'Pradelsta'),
     ]
-    invoice_status = models.CharField(max_length=20, blank=True, null=True, choices=STATUS_OF_INVOICE, default='l')
+    invoice_status = models.CharField(verbose_name="Statusas", max_length=20, blank=True, null=True, choices=STATUS_OF_INVOICE, default='l')
+    invoice_total = models.FloatField(verbose_name="Sąskaitos suma", validators=[MinValueValidator(0.0)])
     # Related data
-    client = models.ForeignKey(Client, on_delete=models.SET_NULL, blank=True, null=True)
-    product = models.ForeignKey(Product, on_delete=models.SET_NULL, blank=True, null=True)
-    service = models.ForeignKey(Service, on_delete=models.SET_NULL, blank=True, null=True)
+    client = models.ForeignKey(Client, verbose_name="Klientas", on_delete=models.SET_NULL, blank=False, null=True)
+    product = models.ForeignKey(Product, verbose_name="Prekė", on_delete=models.SET_NULL, blank=True, null=True)
+    service = models.ForeignKey(Service, verbose_name="Paslauga", on_delete=models.SET_NULL, blank=True, null=True)
     # Additional data
     date_created = models.DateTimeField(verbose_name="Sukurta", blank=True, null=True, default=datetime.now)
     last_updated = models.DateTimeField(verbose_name="Redaguota", blank=True, null=True)

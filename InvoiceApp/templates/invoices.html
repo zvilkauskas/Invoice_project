@@ -41,6 +41,7 @@
                     <td>{{ invoice.date_created|date:"Y-m-d H:i" }}</td>
                     <td>{{ invoice.due_date|date:"Y-m-d"}}</td>
                     <td>{{ invoice.get_invoice_status_display }}</td>
+                    <td></td>
                 </tr>
                 {% endfor %}
                 </tbody>

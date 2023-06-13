@@ -24,8 +24,8 @@ class Client(models.Model):
                f"{self.address} " \
                f"{self.email_address} " \
                f"{self.phone_number} " \
-               f"{self.date_created} " \
-               f"{self.last_updated} "
+               # f"{self.date_created} " \
+               # f"{self.last_updated} "
 
     # Saves date_created and last_updated data in desired formatting
     # Settings.py USE_TZ = False.
@@ -178,7 +178,6 @@ class Invoice(models.Model):
 
     def apmoketi_iki_papildomai(self):
         reiksme = int(self.payment_terms)
-
         terminas = date.today() + timedelta(days=reiksme)
         return terminas
 

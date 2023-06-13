@@ -31,8 +31,7 @@ class AddNewServiceForm(forms.ModelForm):
 class CreateNewInvoiceForm(forms.ModelForm):
     class Meta:
         model = Invoice
-        fields = ('invoice_name', 'invoice_number', 'payment_terms', 'invoice_status',)# 'client', 'product', 'service',)
-        #widgets = {'due_date': forms.HiddenInput()}
+        fields = ('invoice_name', 'invoice_number', 'payment_terms', 'invoice_status', 'client')#, 'product', 'service',)
 
 
 
@@ -48,13 +47,3 @@ class UserLoginForm(forms.ModelForm):
         )
 
 
-class SelectProductForm(s2forms.ModelSelect2Widget):
-    class Meta:
-        model = Product
-        fields = ['product_name']
-
-
-class SelectClientForm(forms.ModelForm):
-    class Meta:
-        model = Invoice
-        fields = ['client']

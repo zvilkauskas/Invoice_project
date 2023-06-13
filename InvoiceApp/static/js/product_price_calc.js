@@ -44,7 +44,7 @@ $(document).ready(function () {
                 )
                 .append($('<td>')
                     .append($('<p class="sum">')
-                        .text('0').attr('id', 'sum' + id)
+                        .text('0').attr('id', 'sum' + id).attr('name', 'sum')
                     )
                 )
                 .append($('<td>')

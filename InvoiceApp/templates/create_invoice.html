@@ -7,76 +7,78 @@
 <body>
 <link href="{% static 'css/input-width.css' %}" rel="stylesheet">
 <link href="{% static 'css/short_field.css' %}" rel="stylesheet">
-
-
-<select name="select-box2" class="form-select short_input" id="select-box2">
-    <option selected disabled="true" value="">Pasirinkite prekę...</option>
-
-    {% for product in all_products %}
-    <option
-            value="{{ product.product_id }}"
-            data-name="{{ product.product_name }}"
-            data-description="{{ product.product_description }}"
-            data-price="{{ product.product_price}}"
-            >{{ product.product_name }}</option>
-    {% endfor %}
-</select>
-
-<!--<button type="button" class="btn btn-primary" data-bs-toggle="modal">Pridėti prekę</button>-->
-
-<div class="table-responsive product-list-table" id="product-table">
-    <table class="table table-striped table-sm">
-        <thead>
-        <tr>
-            <th>Pavadinimas</th>
-            <th>Aprašymas</th>
-            <th>Kiekis</th>
-            <th>Kaina</th>
-            <th>Suma</th>
-            <th></th>
-        </tr>
-        </thead>
-        <tbody>
-
-        </tbody>
-    </table>
-</div>
-
-
-<select name="select-box3" class="form-select short_input" id="select-box3">
-    <option selected disabled="true" value="">Pasirinkite paslaugą...</option>
-
-    {% for service in all_services %}
-    <option
-            value="{{ service.service_id }}"
-            data-name="{{ service.service_name }}"
-            data-description="{{ service.service_description }}"
-            data-price="{{ service.service_price}}"
-            >{{ service.service_name }}</option>
-    {% endfor %}
-</select>
-
-<div class="table-responsive service-list-table" id="service-table">
-    <table class="table table-striped table-sm">
-        <thead>
-        <tr>
-            <th>Pavadinimas</th>
-            <th>Aprašymas</th>
-            <th>Kiekis</th>
-            <th>Kaina</th>
-            <th>Suma</th>
-            <th></th>
-        </tr>
-        </thead>
-        <tbody>
-        </tbody>
-    </table>
-</div>
-
+<link href="{% static 'css/pricedivright.css' %}" rel="stylesheet">
 
 <div class="content-section">
     <form method="POST">
         {% csrf_token %}
+
+        <select name="select-box2" class="form-select short_input" id="select-box2">
+            <option selected disabled="true" value="">Pasirinkite prekę...</option>
+
+            {% for product in all_products %}
+            <option
+                    value="{{ product.product_id }}"
+                    data-name="{{ product.product_name }}"
+                    data-description="{{ product.product_description }}"
+                    data-price="{{ product.product_price}}"
+                    >{{ product.product_name }}</option>
+            {% endfor %}
+        </select>
+
+        <div class="table-responsive product-list-table" id="product-table">
+            <table class="table table-striped table-sm">
+                <thead>
+                <tr>
+                    <th>Pavadinimas</th>
+                    <th>Aprašymas</th>
+                    <th>Kiekis</th>
+                    <th>Kaina</th>
+                    <th>Suma</th>
+                    <th></th>
+                </tr>
+                </thead>
+                <tbody>
+
+                </tbody>
+            </table>
+        </div>
+
+        <select name="select-box3" class="form-select short_input" id="select-box3">
+            <option selected disabled="true" value="">Pasirinkite paslaugą...</option>
+
+            {% for service in all_services %}
+            <option
+                    value="{{ service.service_id }}"
+                    data-name="{{ service.service_name }}"
+                    data-description="{{ service.service_description }}"
+                    data-price="{{ service.service_price}}"
+                    >{{ service.service_name }}</option>
+            {% endfor %}
+        </select>
+
+        <div class="table-responsive service-list-table" id="service-table">
+            <table class="table table-striped table-sm">
+                <thead>
+                <tr>
+                    <th>Pavadinimas</th>
+                    <th>Aprašymas</th>
+                    <th>Kiekis</th>
+                    <th>Kaina</th>
+                    <th>Suma</th>
+                    <th></th>
+                </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+
+        <div id="price_div">
+            <label class="hide-show">Sąskaitos suma: </label>
+            <input type="text" value="" name="total_price" class="totalSum hide-show">
+        </div>
+
         <fieldset class="form-group" style="width: 300px;">
             <legend class="border-bottom mb-4">Testing</legend>
             {{ invoice_form|crispy }}
@@ -86,59 +88,12 @@
             <button class="btn btn-primary" type="submit">Išsaugoti</button>
             <a href="{% url 'invoices' %}" class="btn btn-secondary">Grįžti</a>
         </div>
+
     </form>
 </div>
 
-
-
-<!--<script>-->
-<!--$(".product-list-table").hide();-->
-<!--$(document).ready(function(){-->
-<!--$(document).on('change keyup', '.quantity', function() {-->
-<!--        var quantity = $(this).attr('id')-->
-<!--        var priceId = '#'+ $(this).attr("id").replace("quantity", "price");-->
-<!--        var price = $(priceId).text();-->
-<!--        var sum = '#'+ $(this).attr("id").replace("quantity", "sum");-->
-<!--        var newPrice = parseFloat(price) * parseFloat($(this).val());-->
-<!--        $(sum).text(newPrice);-->
-<!--    });-->
-
-<!--    $('#select-box2').on('change', function(){-->
-<!--        $(".product-list-table").show();-->
-<!--        let id = $(this).find(":selected").val();-->
-
-<!--  $("#product-table").find('tbody')-->
-<!--    .append($('<tr>')-->
-<!--        .append($('<td>')-->
-<!--            .append($('<p>')-->
-<!--                .text($(this).find(":selected").data('name'))-->
-<!--            )-->
-<!--        )-->
-<!--         .append($('<td>')-->
-<!--            .append($('<p>')-->
-<!--                .text($(this).find(":selected").data('description'))-->
-<!--            )-->
-<!--        )-->
-<!--         .append($('<td>')-->
-<!--            .append($('<input type="text" class="quantity">')-->
-<!--                .text('0').attr('id', 'quantity'+id)-->
-<!--            )-->
-<!--        )-->
-<!--         .append($('<td>')-->
-<!--            .append($('<p>')-->
-<!--                .text($(this).find(":selected").data('price')).attr('id', 'price'+id)-->
-<!--            )-->
-<!--        )-->
-<!--         .append($('<td>')-->
-<!--            .append($('<p class="sum">')-->
-<!--                .text('0').attr('id', 'sum'+id)-->
-<!--            )-->
-<!--        )-->
-<!--    );-->
-<!--    });-->
-<!--});-->
-<!--</script>-->
-<script src="{% static 'js/product_price_calc.js' %}"></script>
-<script src="{% static 'js/service_price_calc.js' %}"></script>
+<!--<script src="{% static 'js/product_price_calc.js' %}"></script>-->
+<!--<script src="{% static 'js/service_price_calc.js' %}"></script>-->
+<script src="{% static 'js/calculations.js' %}"></script>
 </body>
 {% endif %}

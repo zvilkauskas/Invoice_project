@@ -8,7 +8,7 @@ from .forms import UserLoginForm
 from django.contrib.auth import logout
 from django.contrib.auth.models import User, auth
 from .models import Client, Product, Service, Invoice
-from .forms import AddNewClientForm, AddNewProductForm, AddNewServiceForm, CreateNewInvoiceForm, SelectProductForm, SelectClientForm
+from .forms import AddNewClientForm, AddNewProductForm, AddNewServiceForm, CreateNewInvoiceForm
 from django.urls import resolve
 from django.shortcuts import render
 from uuid import uuid4
@@ -230,18 +230,20 @@ def add_service(request):
 @login_required
 def create_full_invoice(request):
     if request.method == 'POST':
+        total_invoice_sum = request.POST.get('total_price')
+        print(total_invoice_sum)
+        print(type(total_invoice_sum))
+
         invoice_form = CreateNewInvoiceForm(request.POST)
-        if invoice_form.is_valid:
-            invoice_form.save()
-            messages.success(request, 'Sąskaita išsaugota')
-            return redirect('invoices')
-        else:
-            messages.error(request, 'Nepavyko')
-            return redirect('create_invoice')
+        # if invoice_form.is_valid:
+        #     invoice_form.save()
+        #     messages.success(request, 'Sąskaita išsaugota')
+        #     return redirect('invoices')
+        # else:
+        #     messages.error(request, 'Nepavyko')
+        #     return redirect('create_invoice')
 
     invoice_form = CreateNewInvoiceForm()
-    select_product = SelectProductForm()
-    select_client = SelectClientForm()
     all_products = Product.objects.all()
     all_services = Service.objects.all()
 
@@ -249,8 +251,6 @@ def create_full_invoice(request):
         'current_route': resolve(request.path_info).url_name,
         'title': 'Nauja sąskaita',
         'invoice_form': invoice_form,
-        'select_product': select_product,
-        'select_client': select_client,
         'all_products': all_products,
         'all_services': all_services,
     }

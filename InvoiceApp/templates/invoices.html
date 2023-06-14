@@ -30,6 +30,7 @@
                         <th scope="col">Apmokėti iki</th>
                         <th scope="col">Būklė</th>
                         <th scope="col">Sąskaitos suma</th>
+                        <th></th>
                     </tr>
                 </thead>
 
@@ -42,6 +43,9 @@
                     <td>{{ invoice.due_date|date:"Y-m-d"}}</td>
                     <td>{{ invoice.get_invoice_status_display }}</td>
                     <td>{{ invoice.invoice_total }}</td>
+                    <td>
+                        <a href="{% url 'edit_invoice' invoice.invoice_id %}" class="btn btn-warning">Redaguoti sąskaitą</a>
+                    </td>
                 </tr>
                 {% endfor %}
                 </tbody>

@@ -156,6 +156,7 @@ class Invoice(models.Model):
     ]
     invoice_status = models.CharField(verbose_name="Statusas", max_length=20, blank=True, null=True, choices=STATUS_OF_INVOICE, default='l')
     invoice_total = models.FloatField(verbose_name="Sąskaitos suma", validators=[MinValueValidator(0.0)])
+    invoice_products_services = models.TextField(verbose_name="Sąskaitos prekės/paslaugos")
     # Related data
     client = models.ForeignKey(Client, verbose_name="Klientas", on_delete=models.SET_NULL, blank=False, null=True)
     product = models.ForeignKey(Product, verbose_name="Prekė", on_delete=models.SET_NULL, blank=True, null=True)

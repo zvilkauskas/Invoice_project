@@ -2,24 +2,22 @@ $(".product-list-table").hide();
 
 $(document).ready(function () {
 
-    $(document).on('change keyup', '.quantity', function () {
+    $(document).on('change keyup', '.product_quantity', function () {
         var quantity = $(this).attr('id')
-        var priceId = '#' + $(this).attr("id").replace("quantity", "price");
+        var priceId = '#' + $(this).attr("id").replace("product_quantity", "product_price");
         var price = $(priceId).text();
-        var sum = '#' + $(this).attr("id").replace("quantity", "sum");
+        var sum = '#' + $(this).attr("id").replace("product_quantity", "product_sum");
         var newPrice = parseFloat(price) * parseFloat($(this).val());
         $(sum).text(newPrice);
         calculateTotal()
-        getName()
+        getData()
     });
-
 
     $(document).on('click', '.delete', function () {
         var row = $(this).data('row');
         $(this).closest('tr').remove();
         calculateTotal()
     });
-
 
     $('#select-box2').on('change', function () {
         $(".product-list-table").show();
@@ -38,18 +36,18 @@ $(document).ready(function () {
                     )
                 )
                 .append($('<td>')
-                    .append($('<input type="text" class="quantity">')
-                        .text('0').attr('id', 'quantity' + id)
+                    .append($('<input type="text" class="product_quantity">')
+                        .text('0').attr('id', 'product_quantity' + id)
                     )
                 )
                 .append($('<td>')
                     .append($('<p>')
-                        .text($(this).find(":selected").data('price')).attr('id', 'price' + id)
+                        .text($(this).find(":selected").data('price')).attr('id', 'product_price'+id).attr('class', 'product_price')
                     )
                 )
                 .append($('<td>')
-                    .append($('<p class="sum">')
-                        .text('0').attr('id', 'sum' + id)
+                    .append($('<p class="product_sum">')
+                        .text('0').attr('id', 'product_sum' + id)
                     )
                 )
                 .append($('<td>')
@@ -71,7 +69,7 @@ $(document).ready(function(){
         var newPrice = parseFloat(price) * parseFloat($(this).val());
         $(sum).text(newPrice);
         calculateTotal()
-        getName()
+        getData()
     });
 
     $(document).on('click', '.delete', function () {
@@ -103,7 +101,7 @@ $(document).ready(function(){
                 )
                 .append($('<td>')
                     .append($('<p>')
-                        .text($(this).find(":selected").data('price')).attr('id', 'service_price'+id)
+                        .text($(this).find(":selected").data('price')).attr('id', 'service_price'+id).attr('class', 'service_price')
                     )
                 )
                 .append($('<td>')
@@ -121,7 +119,7 @@ $(document).ready(function(){
 function calculateTotal() {
     var sum = 0;
 
-    $('.sum, .service_sum').each(function() {
+    $('.product_sum, .service_sum').each(function() {
         var value = parseFloat($(this).text());
 
         if (!isNaN(value)) {
@@ -132,14 +130,46 @@ function calculateTotal() {
     $('.totalSum').val(sum.toFixed(2));
 }
 
-function getName() {
-    var objects = []
-    $('.product_name, .service_name').each(function() {
-       var value = $(this).text();
-       objects.push(value);
-    })
+function getData() {
+    var objects = [];
 
-    $('.invoiceProducts').val(objects);
+    $('#product-table tbody tr').each(function() {
+        var rowData = {};
+
+        var name = $(this).find('.product_name').text();
+        var quantity = $(this).find('.product_quantity').val();
+        var total = $(this).find('.product_sum').text();
+        var price = $(this).find('.product_price').text();
+
+        rowData.type = 'product';
+        rowData.name = name;
+        rowData.quantity = quantity;
+        rowData.price = price;
+        rowData.total = total;
+
+        objects.push(rowData);
+    });
+
+    $('#service-table tbody tr').each(function() {
+        var rowData = {};
+
+        var name = $(this).find('.service_name').text();
+        var quantity = $(this).find('.service_quantity').val();
+        var total = $(this).find('.service_sum').text();
+        var price = $(this).find('.service_price').text();
+
+        rowData.type = 'service';
+        rowData.name = name;
+        rowData.quantity = quantity;
+        rowData.price = price;
+        rowData.total = total;
+
+        objects.push(rowData);
+    });
+    var jsonified_objects = JSON.stringify(objects);
+//    console.log(objects);
+      console.log(jsonified_objects)
+    $('.invoiceProductsServices').val(jsonified_objects);
 }
 
 

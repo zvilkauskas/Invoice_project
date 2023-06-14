@@ -65,8 +65,7 @@ class InvoiceAdmin(admin.ModelAdmin):
 
     list_display = (
         'invoice_id', 'invoice_name', 'invoice_number', 'admin_date_created',
-        'admin_due_date', 'admin_last_updated', 'invoice_status', 'invoice_total', 'client', 'product', 'service',
-    )
+        'admin_due_date', 'admin_last_updated', 'invoice_status', 'invoice_total', 'client')# 'product', 'service',)
 
 
 admin.site.register(Client, ClientAdmin)

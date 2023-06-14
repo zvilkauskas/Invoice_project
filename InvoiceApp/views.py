@@ -3,15 +3,15 @@ from django.contrib.auth.forms import User
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.views.decorators.csrf import csrf_protect
 from django.contrib import messages
-from django.views import generic
 from .forms import UserLoginForm
 from django.contrib.auth import logout
 from django.contrib.auth.models import User, auth
 from .models import Client, Product, Service, Invoice
-from .forms import AddNewClientForm, AddNewProductForm, AddNewServiceForm, CreateNewInvoiceForm, EditInvoiceForm
+from .forms import AddNewClientForm, AddNewProductForm, AddNewServiceForm, CreateNewInvoiceForm, EditInvoiceForm, \
+    EditProductForm, EditServiceForm, EditClientForm
 from django.urls import resolve
 from django.shortcuts import render
-from uuid import uuid4
+import json
 
 
 # ----------------------------------------- LOGIN, LOGOUT, REGISTRATION VIEWS ------------------------------------------
@@ -152,7 +152,7 @@ def services(request):
 
 @login_required
 def invoices(request):
-    invoices = Invoice.objects.all()
+    invoices = Invoice.objects.all().order_by('-invoice_number').values()
     context = {
         'invoices': invoices,
         'current_route': resolve(request.path_info).url_name,
@@ -227,18 +227,29 @@ def add_service(request):
         }
     return render(request, 'main_page.html', context)
 
+
 @login_required
 def create_full_invoice(request):
     if request.method == 'POST':
+        # gauname rezultata is JS
+        json_of_products_services = request.POST.get('invoice_products_services')
+        # cia vyksta serializacija
+        list_of_p_s = json.loads(json_of_products_services)
+        # sukuriamas naujas stringas, kuriame graziai israsoma saskaitos informacija
+        pretty_string = ""
+        for element in list_of_p_s:
+            pretty_string += f"Prekė: {element['name']}, Kiekis: {element['quantity']}, Kaina: {element['price']}, Suma: {element['total']}\n"
 
         invoice_form = CreateNewInvoiceForm(request.POST)
+        # sukurtas forms.py metodas set_invoice_products_services, kuris leidzia django pakeisti duomenis
+        invoice_form.set_invoice_products_services(pretty_string)
         if invoice_form.is_valid():
             invoice_form.save()
             messages.success(request, 'Sąskaita išsaugota')
             return redirect('invoices')
-        # else:
-        #     messages.error(request, 'Nepavyko')
-        #     return redirect('create_invoice')
+        else:
+            messages.error(request, 'Nepavyko')
+            return redirect('create_invoice')
 
     invoice_form = CreateNewInvoiceForm()
     all_products = Product.objects.all()
@@ -253,6 +264,7 @@ def create_full_invoice(request):
     }
     return render(request, 'main_page.html', context)
 
+
 @login_required
 def edit_invoice(request, pk):
     invoice = Invoice.objects.get(invoice_id=pk)
@@ -261,12 +273,38 @@ def edit_invoice(request, pk):
         if form.is_valid():
             change_form = form.save(False)
             change_form.save()
-            return redirect('edit_invoice')
-        else:
-            form = EditInvoiceForm(instance=invoice)
+            return redirect('invoices')
+    else:
+        form = EditInvoiceForm(instance=invoice)
     context = {
+        'current_route': resolve(request.path_info).url_name,
+        'title': 'Sąskaitos redagavimas',
         'form': form
     }
     return render(request, 'main_page.html', context)
+
+@login_required
+def edit_product(request, pk):
+    product = Product.objects.get(product_id=pk)
+    if request.method == 'POST':
+        form = EditProductForm(data=request.POST, instance=product)
+        if form.is_valid():
+            change_form = form.save(False)
+            change_form.form.save()
+            return redirect('products')
+    else:
+        form = EditProductForm(instance=product)
+    context = {
+        'current_route': resolve(request.path_info).url_name,
+        'title': 'Produkto redagavimas',
+        'form': form
+    }
+    return render(request, 'main_page.html', context)
+
+@login_required
+def edit_service(request, pk):
     pass
 
+@login_required
+def edit_client(request, pk):
+    pass

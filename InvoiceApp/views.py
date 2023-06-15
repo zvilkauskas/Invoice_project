@@ -6,9 +6,9 @@ from django.contrib import messages
 from .forms import UserLoginForm
 from django.contrib.auth import logout
 from django.contrib.auth.models import User, auth
-from .models import Client, Product, Service, Invoice
-from .forms import AddNewClientForm, AddNewProductForm, AddNewServiceForm, CreateNewInvoiceForm, EditInvoiceForm, \
-    EditProductForm, EditServiceForm, EditClientForm
+from .models import Client, Product, Service, Invoice, CompanyInfo
+from .forms import AddNewClientForm, AddNewProductForm, AddNewServiceForm, CreateNewInvoiceForm, \
+    EditInvoiceForm, EditProductForm, EditServiceForm, EditClientForm, EditCompanyInfoForm, AddCompanyInfoForm
 from django.urls import resolve
 from django.shortcuts import render
 import json
@@ -96,8 +96,7 @@ def search(request):
     pass
 
 
-# --------------------------------- INDEX, CLIENTS, PRODUCTS, SERVICES, INVOICES VIEWS ---------------------------------
-
+# --------------------- INDEX, MAIN PAGE, COMPANY INFO, CLIENTS, PRODUCTS, SERVICES, INVOICES VIEWS --------------------
 def index(request):
     context = {}
     return render(request, 'index.html', context)
@@ -116,7 +115,17 @@ def main_page(request):
     return render(request, 'main_page.html', context)
 
 
-# Displays list of clients.
+@login_required
+def company_info(request):
+    company = CompanyInfo.objects.all()
+    context = {
+        'current_route': resolve(request.path_info).url_name,
+        'company': company,
+        'title': 'Įmonės rekvizitai'
+    }
+    return render(request, 'main_page.html', context)
+
+
 @login_required
 def clients(request):
     clients = Client.objects.all()
@@ -152,7 +161,7 @@ def services(request):
 
 @login_required
 def invoices(request):
-    invoices = Invoice.objects.all().order_by('-invoice_number').values()
+    invoices = Invoice.objects.all().order_by('-invoice_number')
     context = {
         'invoices': invoices,
         'current_route': resolve(request.path_info).url_name,
@@ -161,8 +170,28 @@ def invoices(request):
     return render(request, 'main_page.html', context)
 
 
-# --------------------------------------- CREATE CLIENT, PRODUCT, SERVICE VIEWS ---------------------------------------
-# Function view to add client.
+# -------------------------------- CREATE COMPANY INFO, CLIENT, PRODUCT, SERVICE VIEWS ---------------------------------
+@login_required
+def add_company_info(request):
+    if request.method == 'POST':
+        form = AddCompanyInfoForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Įmonės rekvizitai išsaugoti')
+            return redirect('company_info')
+        else:
+            messages.error(request, 'Nepavyko')
+            return redirect('add_company_info')
+    else:
+        form = AddCompanyInfoForm()
+        context = {
+            'current_route': resolve(request.path_info).url_name,
+            'title': 'Įmonės rekvizitai',
+            'form': form
+        }
+    return render(request, 'main_page.html', context)
+
+
 @login_required
 def add_client(request):
     if request.method == 'POST':
@@ -184,7 +213,7 @@ def add_client(request):
     return render(request, 'main_page.html', context)
 
 
-# Function view to add product.
+# Function view to add_create product.
 @login_required
 def add_product(request):
     if request.method == 'POST':
@@ -206,7 +235,7 @@ def add_product(request):
     return render(request, 'main_page.html', context)
 
 
-# Function view to add service.
+# Function view to add_create service.
 @login_required
 def add_service(request):
     if request.method == 'POST':
@@ -238,7 +267,8 @@ def create_full_invoice(request):
         # sukuriamas naujas stringas, kuriame graziai israsoma saskaitos informacija
         pretty_string = ""
         for element in list_of_p_s:
-            pretty_string += f"Prekė: {element['name']}, Kiekis: {element['quantity']}, Kaina: {element['price']}, Suma: {element['total']}\n"
+            pretty_string += f"Prekė: {element['name']}, Kiekis: {element['quantity']}vnt., " \
+                             f"Kaina: {element['price']}€, Suma: {element['total']}€\n"
 
         invoice_form = CreateNewInvoiceForm(request.POST)
         # sukurtas forms.py metodas set_invoice_products_services, kuris leidzia django pakeisti duomenis
@@ -265,6 +295,25 @@ def create_full_invoice(request):
     return render(request, 'main_page.html', context)
 
 
+# ---- EDIT VIEWS----
+@login_required
+def edit_company_info(request, pk):
+    company = CompanyInfo.objects.get(company_id=pk)
+    if request.method == 'POST':
+        form = EditCompanyInfoForm(data=request.POST, instance=company)
+        if form.is_valid():
+            change_form = form.save(False)
+            change_form.save()
+            return redirect('company_info')
+    else:
+        form = EditCompanyInfoForm(instance=company)
+    context = {
+        'current_route': resolve(request.path_info).url_name,
+        'title': 'Įmonės rekvizitų redagavimas',
+        'form': form
+    }
+    return render(request, 'main_page.html', context)
+
 @login_required
 def edit_invoice(request, pk):
     invoice = Invoice.objects.get(invoice_id=pk)
@@ -283,6 +332,7 @@ def edit_invoice(request, pk):
     }
     return render(request, 'main_page.html', context)
 
+
 @login_required
 def edit_product(request, pk):
     product = Product.objects.get(product_id=pk)
@@ -290,7 +340,7 @@ def edit_product(request, pk):
         form = EditProductForm(data=request.POST, instance=product)
         if form.is_valid():
             change_form = form.save(False)
-            change_form.form.save()
+            change_form.save()
             return redirect('products')
     else:
         form = EditProductForm(instance=product)
@@ -301,10 +351,93 @@ def edit_product(request, pk):
     }
     return render(request, 'main_page.html', context)
 
+
 @login_required
 def edit_service(request, pk):
-    pass
+    service = Service.objects.get(service_id=pk)
+    if request.method == 'POST':
+        form = EditServiceForm(data=request.POST, instance=service)
+        if form.is_valid():
+            change_form = form.save(False)
+            change_form.save()
+            return redirect('services')
+    else:
+        form = EditServiceForm(instance=service)
+    context = {
+        'current_route': resolve(request.path_info).url_name,
+        'title': 'Paslaugos redagavimas',
+        'form': form
+    }
+    return render(request, 'main_page.html', context)
+
 
 @login_required
 def edit_client(request, pk):
-    pass
+    client = Client.objects.get(client_id=pk)
+    if request.method == 'POST':
+        form = EditClientForm(data=request.POST, instance=client)
+        if form.is_valid():
+            change_form = form.save(False)
+            change_form.save()
+            return redirect('clients')
+    else:
+        form = EditClientForm(instance=client)
+    context = {
+        'current_route': resolve(request.path_info).url_name,
+        'title': 'Kliento redagavimas',
+        'form': form
+    }
+    return render(request, 'main_page.html', context)
+
+
+# ----------------------------------- DELETE INVOICE, PRODUCT, SERVICE, CLIENT VIEWS -----------------------------------
+@login_required
+def delete_invoice(request, pk):
+    invoice = Invoice.objects.get(invoice_id=pk)
+    if request.method == 'POST':
+        invoice.delete()
+        return redirect('invoices')
+
+    context = {
+        'current_route': resolve(request.path_info).url_name,
+    }
+    return render(request, 'main_page.html', context)
+
+
+@login_required
+def delete_product(request, pk):
+    product = Product.objects.get(product_id=pk)
+    if request.method == 'POST':
+        product.delete()
+        return redirect('products')
+
+    context = {
+        'current_route': resolve(request.path_info).url_name,
+    }
+    return render(request, 'main_page.html', context)
+
+
+@login_required
+def delete_service(request, pk):
+    service = Service.objects.get(service_id=pk)
+    if request.method == 'POST':
+        service.delete()
+        return redirect('services')
+
+    context = {
+        'current_route': resolve(request.path_info).url_name,
+    }
+    return render(request, 'main_page.html', context)
+
+
+@login_required
+def delete_client(request, pk):
+    client = Client.objects.get(client_id=pk)
+    if request.method == 'POST':
+        client.delete()
+        return redirect('clients')
+
+    context = {
+        'current_route': resolve(request.path_info).url_name,
+    }
+    return render(request, 'main_page.html', context)

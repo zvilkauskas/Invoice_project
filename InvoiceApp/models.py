@@ -25,8 +25,8 @@ class Client(models.Model):
                f"{self.address} " \
                f"{self.email_address} " \
                f"{self.phone_number} " \
-               # f"{self.date_created} " \
-               # f"{self.last_updated} "
+            # f"{self.date_created} " \
+        # f"{self.last_updated} "
 
     # Saves date_created and last_updated data in desired formatting
     # Settings.py USE_TZ = False.
@@ -148,19 +148,21 @@ class Invoice(models.Model):
         ('30', '30 dienų'),
         ('60', '60 dienų'),
     ]
-    payment_terms = models.CharField(verbose_name="Apmokėjimo terminas", max_length=10, blank=True, null=True, choices=TERMS_OF_PAYMENT, default='30')
+    payment_terms = models.CharField(verbose_name="Apmokėjimo terminas", max_length=10, blank=True, null=True,
+                                     choices=TERMS_OF_PAYMENT, default='30')
     STATUS_OF_INVOICE = [
         ('l', 'Laukiama apmokėjimo'),
         ('a', 'Apmokėta'),
         ('p', 'Pradelsta'),
     ]
-    invoice_status = models.CharField(verbose_name="Statusas", max_length=20, blank=True, null=True, choices=STATUS_OF_INVOICE, default='l')
+    invoice_status = models.CharField(verbose_name="Statusas", max_length=20, blank=True, null=True,
+                                      choices=STATUS_OF_INVOICE, default='l')
     invoice_total = models.FloatField(verbose_name="Sąskaitos suma", validators=[MinValueValidator(0.0)])
     invoice_products_services = models.TextField(verbose_name="Sąskaitos prekės/paslaugos")
     # Related data
     client = models.ForeignKey(Client, verbose_name="Klientas", on_delete=models.SET_NULL, blank=False, null=True)
-    product = models.ForeignKey(Product, verbose_name="Prekė", on_delete=models.SET_NULL, blank=True, null=True)
-    service = models.ForeignKey(Service, verbose_name="Paslauga", on_delete=models.SET_NULL, blank=True, null=True)
+    # product = models.ForeignKey(Product, verbose_name="Prekė", on_delete=models.SET_NULL, blank=True, null=True)
+    # service = models.ForeignKey(Service, verbose_name="Paslauga", on_delete=models.SET_NULL, blank=True, null=True)
     # Additional data
     date_created = models.DateTimeField(verbose_name="Sukurta", blank=True, null=True, default=datetime.now)
     last_updated = models.DateTimeField(verbose_name="Redaguota", blank=True, null=True)
@@ -187,3 +189,25 @@ class Invoice(models.Model):
     class Meta:
         verbose_name = "Invoice"
         verbose_name_plural = "Invoices"
+
+
+class CompanyInfo(models.Model):
+    company_id = models.AutoField(primary_key=True)
+    company_name = models.CharField("Įmonės pavadinimas", max_length=200)
+    company_registration_number = models.CharField("Įmonės kodas", max_length=200)
+    company_vat_number = models.CharField("PVM kodas", max_length=200)
+    company_address = models.CharField("Adresas", max_length=200)
+    company_email_address = models.EmailField("El. paštas", max_length=100)
+    company_phone_number = models.CharField("Telefono numeris", max_length=20)
+
+    def __str__(self):
+        return f"{self.company_name} " \
+               f"{self.company_registration_number} " \
+               f"{self.company_vat_number} " \
+               f"{self.company_address} " \
+               f"{self.company_email_address} " \
+               f"{self.company_phone_number}"
+
+    class Meta:
+        verbose_name = 'Company'
+        verbose_name_plural = 'Companies'

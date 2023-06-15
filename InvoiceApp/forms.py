@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib.auth.models import User
-from .models import Client, Product, Service, Invoice
+from .models import Client, Product, Service, Invoice, CompanyInfo
 
 
 # Date input form
@@ -17,7 +17,16 @@ class UserLoginForm(forms.ModelForm):
         )
 
 
-# ------------------------------- ADD OR CREATE CLIENT, PRODUCT, SERVICE, INVOICE FORMS --------------------------------
+# ------------------------ ADD OR CREATE COMPANY INFO CLIENT, PRODUCT, SERVICE, INVOICE FORMS --------------------------
+class AddCompanyInfoForm(forms.ModelForm):
+    class Meta:
+        model = CompanyInfo
+        fields = (
+            'company_name', 'company_registration_number', 'company_vat_number', 'company_address',
+            'company_email_address', 'company_phone_number',
+        )
+
+
 class AddNewProductForm(forms.ModelForm):
     class Meta:
         model = Product
@@ -68,7 +77,16 @@ class CreateNewInvoiceForm(forms.ModelForm):
         # {{form.field_name}}
 
 
-# ----------------------------------- EDIT INVOICE, PRODUCT, SERVICE, CLIENT FORMS -------------------------------------
+# ----------------------------------- EDIT COMPANY INFO INVOICE, PRODUCT, SERVICE, CLIENT FORMS -------------------------------------
+class EditCompanyInfoForm(forms.ModelForm):
+    class Meta:
+        model = CompanyInfo
+        fields = (
+            'company_name', 'company_registration_number', 'company_vat_number', 'company_address',
+            'company_email_address', 'company_phone_number',
+        )
+
+
 class EditInvoiceForm(forms.ModelForm):
     class Meta:
         model = Invoice

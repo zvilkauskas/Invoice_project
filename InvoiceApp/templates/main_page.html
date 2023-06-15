@@ -17,35 +17,69 @@
             </div>
         </div>
     </div>
+<!-- View for company info, clients, products, services, invoices -->
+    {% if current_route == 'company_info' %}
+        {% include "company_info.html" %}
 
-    {% if current_route == 'clients' %}
+    {% elif current_route == 'clients' %}
         {% include "clients.html" %}
-
-    {% elif current_route == 'add_client' %}
-        {% include "add_client.html" %}
 
     {% elif current_route == 'products' %}
         {% include "products.html" %}
 
-    {% elif current_route == 'add_product' %}
-        {% include "add_product.html" %}
-
     {% elif current_route == 'services' %}
         {% include "services.html" %}
-
-    {% elif current_route == 'add_service' %}
-        {% include "add_service.html" %}
 
     {% elif current_route == 'invoices' %}
         {% include "invoices.html" %}
 
+<!-- Add clients, products, services, create invoices -->
+    {% elif current_route == 'add_company_info' %}
+        {% include "add_create/add_company_info.html" %}
+
+    {% elif current_route == 'add_client' %}
+        {% include "add_create/add_client.html" %}
+
+    {% elif current_route == 'add_product' %}
+        {% include "add_create/add_product.html" %}
+
+    {% elif current_route == 'add_service' %}
+        {% include "add_create/add_service.html" %}
+
     {% elif current_route == 'create_invoice' %}
-        {% include "create_invoice.html" %}
+        {% include "add_create/create_invoice.html" %}
+
+<!-- Edit clients, products, services, invoices -->
+    {% elif current_route == 'edit_company_info' %}
+        {% include "edit/edit_company_info.html" %}
+
+    {% elif current_route == 'edit_client' %}
+        {% include "edit/edit_client.html" %}
 
     {% elif current_route == 'edit_invoice' %}
-        {% include "edit_invoice.html" %}
+        {% include "edit/edit_invoice.html" %}
+
+    {% elif current_route == 'edit_product' %}
+        {% include "edit/edit_product.html" %}
+
+    {% elif current_route == 'edit_service' %}
+        {% include "edit/edit_service.html" %}
+
+<!-- Delete clients, products, services, invoices -->
+    {% elif current_route == 'delete_client' %}
+        {% include "delete/delete_client.html" %}
+
+    {% elif current_route == 'delete_product' %}
+        {% include "delete/delete_product.html" %}
+
+    {% elif current_route == 'delete_service' %}
+        {% include "delete/delete_service.html" %}
+
+    {% elif current_route == 'delete_invoice' %}
+        {% include "delete/delete_invoice.html" %}
 
     {% endif %}
+
 
 </main>
 

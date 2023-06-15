@@ -1,0 +1,49 @@
+{% load static%}
+{% if user.is_authenticated %}
+<body>
+<link href="{% static 'css/short_field.css' %}" rel="stylesheet">
+    <div class="short_input">
+        <form method="POST">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="company_name"></label>
+                <input name="company_name" type="text" class="form-control" id="company_name"
+                       placeholder="Įmonės pavadinimas">
+                <small class="form-text text-muted">Iki 200 simbolių.</small>
+            </div>
+            <div class="form-group">
+                <label for="company_registration_number"></label>
+                <input name="company_registration_number" type="text" class="form-control" id="company_registration_number"
+                       placeholder="Įmonės kodas">
+                <small class="form-text text-muted">Iki 50 simbolių.</small>
+            </div>
+            <div class="form-group">
+                <label for="company_vat_number"></label>
+                <input name="company_vat_number" type="text" class="form-control" id="company_vat_number"
+                          placeholder="PVM kodas">
+                <small class="form-text text-muted">Iki 50 simbolių.</small>
+            </div>
+            <div class="form-group">
+                <label for="company_address"></label>
+                <input name="company_address" type="text" class="form-control" id="company_address"
+                       placeholder="Adresas">
+                <small class="form-text text-muted">Iki 200 simbolių.</small>
+            </div>
+            <div class="form-group">
+                <label for="company_email_address"></label>
+                <input name="company_email_address" type="email" class="form-control" id="company_email_address"
+                       placeholder="El. paštas">
+                <small class="form-text text-muted">Iki 100 simbolių.</small>
+            </div>
+            <div class="form-group">
+                <label for="company_phone_number"></label>
+                <input name="company_phone_number" type="number" class="form-control" id="company_phone_number"
+                       placeholder="Telefono numeris">
+                <small class="form-text text-muted">Iki 20 simbolių.</small>
+            </div>
+            <button type="submit" class="btn btn-primary">Saugoti</button>
+            <a href="{% url 'company_info' %}" class="btn btn-secondary">Grįžti</a>
+        </form>
+    </div>
+<body>
+{% endif %}

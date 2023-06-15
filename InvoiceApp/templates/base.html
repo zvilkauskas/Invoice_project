@@ -135,6 +135,12 @@
                             </a>
                           </li>
                           <li class="nav-item">
+                            <a class="nav-link {% if current_route == 'company_info' %}active{% endif %}" aria-current="page" href="{% url 'company_info'%}">
+                              <span data-feather="bar-chart-2" class="align-text-bottom"></span>
+                              Įmonės rekvizitai
+                            </a>
+                          </li>
+                          <li class="nav-item">
                             <a class="nav-link {% if current_route == 'clients' %}active{% endif %}" aria-current="page" href="{% url 'clients'%}">
                               <span data-feather="file" class="align-text-bottom"></span>
                               Klientai

@@ -28,8 +28,9 @@
                         <th scope="col">Gavėjas</th>
                         <th scope="col">Išrašymo data</th>
                         <th scope="col">Apmokėti iki</th>
-                        <th scope="col">Būklė</th>
+                        <th scope="col">Statusas</th>
                         <th scope="col">Sąskaitos suma</th>
+                        <th></th>
                         <th></th>
                     </tr>
                 </thead>
@@ -45,6 +46,9 @@
                     <td>{{ invoice.invoice_total }}</td>
                     <td>
                         <a href="{% url 'edit_invoice' invoice.invoice_id %}" class="btn btn-warning">Redaguoti sąskaitą</a>
+                    </td>
+                    <td>
+                        <a href="{% url 'delete_invoice' invoice.invoice_id %}" class="btn btn-danger">Trinti</a>
                     </td>
                 </tr>
                 {% endfor %}

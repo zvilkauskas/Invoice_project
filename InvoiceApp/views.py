@@ -9,7 +9,7 @@ from django.contrib.auth.models import User, auth
 from .models import Client, Product, Service, Invoice, CompanyInfo
 from .forms import AddNewClientForm, AddNewProductForm, AddNewServiceForm, CreateNewInvoiceForm, \
     EditInvoiceForm, EditProductForm, EditServiceForm, EditClientForm, EditCompanyInfoForm, AddCompanyInfoForm
-from django.urls import resolve
+from django.urls import resolve, reverse
 from django.shortcuts import render
 import json
 
@@ -117,10 +117,10 @@ def main_page(request):
 
 @login_required
 def company_info(request):
-    company = CompanyInfo.objects.all()
+    all_company_info = CompanyInfo.objects.all()
     context = {
         'current_route': resolve(request.path_info).url_name,
-        'company': company,
+        'all_company_info': all_company_info,
         'title': 'Įmonės rekvizitai'
     }
     return render(request, 'main_page.html', context)
@@ -295,22 +295,23 @@ def create_full_invoice(request):
     return render(request, 'main_page.html', context)
 
 
-# ---- EDIT VIEWS----
+# ------------------------------- EDIT COMPANY, INVOICE, PRODUCT, SERVICE, CLIENT VIEWS --------------------------------
 @login_required
 def edit_company_info(request, pk):
-    company = CompanyInfo.objects.get(company_id=pk)
+    company_edit = CompanyInfo.objects.get(company_id=pk)
+    print(type(company_edit.company_id))
     if request.method == 'POST':
-        form = EditCompanyInfoForm(data=request.POST, instance=company)
+        form = EditCompanyInfoForm(data=request.POST, instance=company_edit)
         if form.is_valid():
             change_form = form.save(False)
             change_form.save()
             return redirect('company_info')
     else:
-        form = EditCompanyInfoForm(instance=company)
+        form = EditCompanyInfoForm(instance=company_edit)
     context = {
         'current_route': resolve(request.path_info).url_name,
         'title': 'Įmonės rekvizitų redagavimas',
-        'form': form
+        'form': form,
     }
     return render(request, 'main_page.html', context)
 

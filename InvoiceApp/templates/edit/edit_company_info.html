@@ -1,0 +1,25 @@
+{% load static%}
+{% if user.is_authenticated %}
+{% load crispy_forms_tags %}
+
+<body>
+<link href="{% static 'css/input-width.css' %}" rel="stylesheet">
+<link href="{% static 'css/short_field.css' %}" rel="stylesheet">
+<link href="{% static 'css/pricedivright.css' %}" rel="stylesheet">
+    <div>
+        <form method="POST">
+            {% csrf_token %}
+            <fieldset class="form-group" style="width: 300px;">
+                <legend class="border-bottom mb-4">Rekvizitų redagavimas</legend>
+                {{ form|crispy }}
+            </fieldset>
+
+            <br>
+            <div class="form-group">
+                <button class="btn btn-primary" type="submit">Išsaugoti</button>
+                <a href="{% url 'company_info' %}" class="btn btn-secondary">Grįžti</a>
+            </div>
+        </form>
+    </div>
+</body>
+{% endif %}

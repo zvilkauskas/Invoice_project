@@ -8,8 +8,10 @@ from django.contrib.auth import logout
 from django.contrib.auth.models import User, auth
 from .models import Client, Product, Service, Invoice, CompanyInfo
 from .forms import AddNewClientForm, AddNewProductForm, AddNewServiceForm, CreateNewInvoiceForm, \
-    EditInvoiceForm, EditProductForm, EditServiceForm, EditClientForm, EditCompanyInfoForm, AddCompanyInfoForm
-from django.urls import resolve, reverse
+    EditInvoiceForm, EditProductForm, EditServiceForm, EditClientForm, EditCompanyInfoForm, AddCompanyInfoForm, \
+    UserUpdateForm, ProfileUpdateForm
+
+from django.urls import resolve
 from django.shortcuts import render
 import json
 
@@ -117,10 +119,10 @@ def main_page(request):
 
 @login_required
 def company_info(request):
-    all_company_info = CompanyInfo.objects.all()
+    company = CompanyInfo.objects.get(company_id=1)
     context = {
         'current_route': resolve(request.path_info).url_name,
-        'all_company_info': all_company_info,
+        'company': company,
         'title': 'Įmonės rekvizitai'
     }
     return render(request, 'main_page.html', context)
@@ -298,20 +300,20 @@ def create_full_invoice(request):
 # ------------------------------- EDIT COMPANY, INVOICE, PRODUCT, SERVICE, CLIENT VIEWS --------------------------------
 @login_required
 def edit_company_info(request, pk):
-    company_edit = CompanyInfo.objects.get(company_id=pk)
-    print(type(company_edit.company_id))
+    company_object = CompanyInfo.objects.get(company_id=pk)
     if request.method == 'POST':
-        form = EditCompanyInfoForm(data=request.POST, instance=company_edit)
+        form = EditCompanyInfoForm(data=request.POST, instance=company_object)
         if form.is_valid():
             change_form = form.save(False)
             change_form.save()
             return redirect('company_info')
     else:
-        form = EditCompanyInfoForm(instance=company_edit)
+        form = EditCompanyInfoForm(instance=company_object)
     context = {
         'current_route': resolve(request.path_info).url_name,
         'title': 'Įmonės rekvizitų redagavimas',
         'form': form,
+        'company_object': company_object
     }
     return render(request, 'main_page.html', context)
 
@@ -450,8 +452,35 @@ def delete_client(request, pk):
 def invoice_template(request, pk):
     invoice_html_template = Invoice.objects.get(invoice_id=pk)
     company_details = CompanyInfo.objects.get(company_id=1)
+    splitted_data = invoice_html_template.invoice_products_services.split('\n')
+    print(splitted_data)
     context = {
         'invoice_html_template': invoice_html_template,
-        'company': company_details
+        'company': company_details,
+        'splitted_data': splitted_data
     }
     return render(request, 'invoice_template.html', context)
+
+
+# ------------------------------------------------- USER PROFILE VIEW --------------------------------------------------
+@login_required
+def profile(request):
+    if request.method == 'POST':
+        user_form = UserUpdateForm(request.POST, instance=request.user)
+        profile_form = ProfileUpdateForm(request.POST, instance=request.user.profile)
+        if user_form.is_valid() and profile_form.is_valid():
+            user_form.save()
+            profile_form.save()
+            messages.success(request, 'Profilis atnaujintas')
+            return redirect('profile')
+    else:
+        user_form = UserUpdateForm(instance=request.user)
+        profile_form = ProfileUpdateForm(instance=request.user.profile)
+
+    context = {
+        'current_route': resolve(request.path_info).url_name,
+        'title': 'Vartotojo profilis',
+        'user_form': user_form,
+        'profile_form': profile_form
+    }
+    return render(request, 'main_page.html', context)

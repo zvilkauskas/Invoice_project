@@ -64,7 +64,7 @@ background-color:#eee;
                                 <p class="mb-1">Įmonės kodas: {{invoice_html_template.client.registration_number }}</p>
                                 <p class="mb-1">PVM kodas: {{invoice_html_template.client.vat_number }}</p>
                                 <p class="mb-1">Adresas: {{invoice_html_template.client.address }}</p>
-                                <p class="mb-1">Tel. numeris: +{{invoice_html_template.client.phone_number }}</p>
+                                <p class="mb-1">Tel. numeris: {{invoice_html_template.client.phone_number }}</p>
                             <p class="mb-1">El. paštas: <a href="/cdn-cgi/l/email-protection" class="__cf_email__"
                                                    data-cfemail="6a3a180f191e0504270306060f182a0b180713191a1344090507">{{invoice_html_template.client.email_address}}</a>
                             </p>
@@ -104,35 +104,20 @@ background-color:#eee;
                                 </tr>
                                 </thead>
                                 <tbody>
+
+                                {% for line in splitted_data %}
                                 <tr>
-                                    <th scope="row">01</th>
+                                    <th scope="row">{{ forloop.counter }}</th>
                                     <td>
                                         <div>
-                                            <p class="text-truncate font-size-14 mb-1">{{invoice_html_template.invoice_products_services}}</p>
+                                            <p class="text-truncate font-size-14 mb-1">{{line}}</p>
                                         </div>
                                     </td>
                                     <td>$ 245.50</td>
                                     <td>1</td>
                                     <td class="text-end">$ 245.50</td>
                                 </tr>
-
-                                <tr>
-                                    <th scope="row">02</th>
-                                    <td>
-                                        <div>
-                                            <h5 class="text-truncate font-size-14 mb-1">Stainless Steel S010</h5>
-                                            <p class="text-muted mb-0">Watch, Gold</p>
-                                        </div>
-                                    </td>
-                                    <td>$ 245.50</td>
-                                    <td>2</td>
-                                    <td class="text-end">$491.00</td>
-                                </tr>
-
-<!--                                <tr>-->
-<!--                                    <th scope="row" colspan="4" class="text-end">Suma:</th>-->
-<!--                                    <td class="text-end">{{ invoice_html_template.invoice_total }}€</td>-->
-<!--                                </tr>-->
+                                {% endfor %}
 
                                 <tr>
                                     <th scope="row" colspan="4" class="border-0 text-end">Viso:</th>
@@ -141,6 +126,11 @@ background-color:#eee;
 
                                 </tbody>
                             </table>
+                        </div>
+                        <div class="py-2">
+                            <h5 class="font-size-15">Sąskaitą išrašė: {{ user.profile.responsibilities }} {{ user.get_full_name}}</h5>
+                            <p>Jeigu sąskaitoje radote neatitikimų, susisiekite su sąskaitą išrašiusiu asmeniu žemiau nurodytais kontaktais.<br>
+                            Telefonas: {{ user.profile.phone_number }} | El. paštas: {{ user.email }}</p>
                         </div>
                         <div class="d-print-none mt-4">
                             <div class="float-end">

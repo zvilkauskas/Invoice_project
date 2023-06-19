@@ -211,3 +211,12 @@ class CompanyInfo(models.Model):
     class Meta:
         verbose_name = 'Company'
         verbose_name_plural = 'Companies'
+
+
+class Profile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    responsibilities = models.CharField("Pareigos", max_length=200)
+    phone_number = models.CharField("Telefono numeris", max_length=200)
+
+    def __str__(self):
+        return f"{self.user.username}, {self.responsibilities}"

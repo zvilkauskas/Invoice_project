@@ -1,0 +1,53 @@
+{% load static%}
+
+{% if user.is_authenticated %}
+
+{% load crispy_forms_tags %}
+
+<body>
+<link href="{% static 'css/short_field.css' %}" rel="stylesheet">
+
+    {% if messages %}
+      {% for message in messages %}
+        {% if message.tags == 'error' %}
+          <div class="alert alert-danger">
+            {{ message }}
+          </div>
+        {% else %}
+          <div class="alert alert-{{ message.tags }}">
+            {{ message }}
+          </div>
+        {% endif %}
+      {% endfor %}
+    {% endif %}
+
+    <div>
+        {%comment%}<a href="{% url 'add_company_info' %}" class="btn btn-primary">Pridėti rekvizitus</a>
+        <a href="{% url 'edit_company_info' company.company_id %}" class="btn btn-warning">Redaguoti rekvizitus</a>{%endcomment%}
+    </div>
+    <div>
+        <h5><b>Vartotojo vardas:</b> {{ user.username}}</h5>
+        <h5><b>Vardas:</b> {{ user.first_name }}</h5>
+        <h5><b>Pavardė:</b> {{ user.last_name }}</h5>
+        <h5><b>Pareigos:</b> {{ user.profile.responsibilities }}</h5>
+        <h5><b>El.paštas:</b> {{ user.email }}</h5>
+        <h5><b>Telefono numeris:</b> {{ user.profile.phone_number }}</h5>
+    </div>
+    <br>
+    <div class="short_input">
+        <form method="POST">
+             {% csrf_token %}
+            <fieldset class="form-group" style="width: 300px;">
+                <legend class="border-bottom mb-4">Profilio redagavimo forma</legend>
+                {{ user_form|crispy }}
+                {{ profile_form|crispy }}
+            </fieldset>
+            <br>
+            <div class="form-group">
+                <button class="btn btn-primary" type="submit">Išsaugoti</button>
+                {%comment%}<a href="{% url 'invoices' %}" class="btn btn-secondary">Grįžti</a>{%endcomment%}
+            </div>
+        </form>
+    </div>
+</body>
+{% endif %}

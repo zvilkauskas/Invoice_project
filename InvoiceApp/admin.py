@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Client, Product, Service, Invoice, CompanyInfo
+from .models import Client, Product, Service, Invoice, CompanyInfo, Profile
 
 
 class CompanyInfoAdmin(admin.ModelAdmin):
@@ -75,8 +75,10 @@ class InvoiceAdmin(admin.ModelAdmin):
         'admin_due_date', 'admin_last_updated', 'invoice_status', 'invoice_total', 'client')  # 'product', 'service',)
 
 
+
 admin.site.register(Client, ClientAdmin)
 admin.site.register(Product, ProductAdmin)
 admin.site.register(Service, ServiceAdmin)
 admin.site.register(Invoice, InvoiceAdmin)
 admin.site.register(CompanyInfo, CompanyInfoAdmin)
+admin.site.register(Profile)

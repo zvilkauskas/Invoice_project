@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib.auth.models import User
-from .models import Client, Product, Service, Invoice, CompanyInfo
+from .models import Client, Product, Service, Invoice, CompanyInfo, Profile
 
 
 # Date input form
@@ -92,6 +92,13 @@ class EditInvoiceForm(forms.ModelForm):
         model = Invoice
         fields = (
             'invoice_products_services', 'invoice_name', 'invoice_number', 'payment_terms', 'invoice_status', 'client')
+        widgets = {
+            'invoice_products_services': forms.Textarea(attrs={
+                'rows': 6,
+                'cols': 4,
+                'style':'resize:none;'
+            })
+        }
 
 
 class EditProductForm(forms.ModelForm):
@@ -116,3 +123,26 @@ class EditClientForm(forms.ModelForm):
         fields = (
             'client_name', 'registration_number', 'vat_number', 'address', 'email_address', 'phone_number',
         )
+
+
+class UserUpdateForm(forms.ModelForm):
+    first_name = forms.CharField()
+    last_name = forms.CharField()
+    email = forms.EmailField()
+
+    class Meta:
+        model = User
+        fields = ('username', 'first_name', 'last_name', 'email')
+        widgets = {
+            'username': forms.TextInput(attrs={
+                'readonly': True
+            })
+        }
+
+class ProfileUpdateForm(forms.ModelForm):
+    class Meta:
+        model = Profile
+        fields = ('responsibilities', 'phone_number')
+
+
+

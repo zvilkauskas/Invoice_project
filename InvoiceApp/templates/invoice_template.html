@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+
+
+    <title>Sąskaitos peržiūra</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style type="text/css">
+    	body{margin-top:20px;
+background-color:#eee;
+}
+
+.card {
+    box-shadow: 0 20px 27px 0 rgb(0 0 0 / 5%);
+}
+.card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    word-wrap: break-word;
+    background-color: #fff;
+    background-clip: border-box;
+    border: 0 solid rgba(0,0,0,.125);
+    border-radius: 1rem;
+}
+
+
+    </style>
+</head>
+<body>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.1/css/all.min.css"
+      integrity="sha256-2XFplPlrFClt0bIdPgpz8H7ojnk10H69xRqd9+uTShA=" crossorigin="anonymous"/>
+<div class="container">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="card">
+                <div class="card-body">
+                    <div class="invoice-title">
+                        <h4 class="float-end font-size-15">SĄSKAITA-FAKTŪRA
+                            <span>Serija {{invoice_html_template.invoice_name }} Nr. {{invoice_html_template.invoice_number }}</span>
+                        </h4>
+                        <div class="mb-4">
+                            <h2 class="mb-1 text-muted">{{ company.company_name }}</h2>
+                        </div>
+                        <div class="text-muted">
+                            <p class="mb-1">Įmonės kodas: {{ company.company_registration_number }}</p>
+                            <p class="mb-1">PVM kodas: {{ company.company_vat_number }}</p>
+                            <p class="mb-1">Adresas: {{ company.company_address }}</p>
+                            <p class="mb-1">Tel. numeris: {{ company.company_phone_number}}</p>
+                            <p class="mb-1">El. paštas: <a href="/cdn-cgi/l/email-protection" class="__cf_email__"
+                                                   data-cfemail="6a3a180f191e0504270306060f182a0b180713191a1344090507">{{ company.company_email_address }}</a>
+                            </p>
+                        </div>
+                    </div>
+                    <hr class="my-4">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="text-muted">
+                                <h5 class="font-size-16 mb-3">Klientas:</h5>
+                                <h5 class="font-size-15 mb-2">{{invoice_html_template.client.client_name }}</h5>
+                                <p class="mb-1">Įmonės kodas: {{invoice_html_template.client.registration_number }}</p>
+                                <p class="mb-1">PVM kodas: {{invoice_html_template.client.vat_number }}</p>
+                                <p class="mb-1">Adresas: {{invoice_html_template.client.address }}</p>
+                                <p class="mb-1">Tel. numeris: +{{invoice_html_template.client.phone_number }}</p>
+                            <p class="mb-1">El. paštas: <a href="/cdn-cgi/l/email-protection" class="__cf_email__"
+                                                   data-cfemail="6a3a180f191e0504270306060f182a0b180713191a1344090507">{{invoice_html_template.client.email_address}}</a>
+                            </p>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-6">
+                            <div class="text-muted text-sm-end">
+                                <div class="mt-4">
+                                    <h5 class="font-size-15 mb-1">Sąskaitos data:</h5>
+                                    <p>{{invoice_html_template.date_created|date:"Y-m-d"}}</p>
+                                </div>
+                                <div class="mt-4">
+                                    <h5 class="font-size-15 mb-1">Apmokėjimo terminas:</h5>
+                                    <p>{{invoice_html_template.payment_terms}} kalendorinių dienų</p>
+                                </div>
+                                <div class="mt-4">
+                                    <h5 class="font-size-15 mb-1">Apmokėjimo data:</h5>
+                                    <p>{{invoice_html_template.due_date|date:"Y-m-d"}}</p>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="py-2">
+                        <h5 class="font-size-15">Prekės ir paslaugos</h5>
+                        <div class="table-responsive">
+                            <table class="table align-middle table-nowrap table-centered mb-0">
+                                <thead>
+                                <tr>
+                                    <th style="width: 70px;">Eil. nr.</th>
+                                    <th>Prekė/Paslauga</th>
+                                    <th>Kaina</th>
+                                    <th>Kiekis</th>
+                                    <th class="text-end" style="width: 120px;">Suma</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <th scope="row">01</th>
+                                    <td>
+                                        <div>
+                                            <p class="text-truncate font-size-14 mb-1">{{invoice_html_template.invoice_products_services}}</p>
+                                        </div>
+                                    </td>
+                                    <td>$ 245.50</td>
+                                    <td>1</td>
+                                    <td class="text-end">$ 245.50</td>
+                                </tr>
+
+                                <tr>
+                                    <th scope="row">02</th>
+                                    <td>
+                                        <div>
+                                            <h5 class="text-truncate font-size-14 mb-1">Stainless Steel S010</h5>
+                                            <p class="text-muted mb-0">Watch, Gold</p>
+                                        </div>
+                                    </td>
+                                    <td>$ 245.50</td>
+                                    <td>2</td>
+                                    <td class="text-end">$491.00</td>
+                                </tr>
+
+<!--                                <tr>-->
+<!--                                    <th scope="row" colspan="4" class="text-end">Suma:</th>-->
+<!--                                    <td class="text-end">{{ invoice_html_template.invoice_total }}€</td>-->
+<!--                                </tr>-->
+
+                                <tr>
+                                    <th scope="row" colspan="4" class="border-0 text-end">Viso:</th>
+                                    <td class="border-0 text-end"><h4 class="m-0 fw-semibold">{{ invoice_html_template.invoice_total }}€</h4></td>
+                                </tr>
+
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="d-print-none mt-4">
+                            <div class="float-end">
+                                <a href="javascript:window.print()" class="btn btn-success me-1"><i
+                                        class="fa fa-print"></i></a>
+<!--                                <a href="#" class="btn btn-primary w-md">Send</a>-->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script>
+<script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js"></script>
+<script type="text/javascript">
+
+</script>
+</body>
+</html>

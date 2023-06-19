@@ -45,6 +45,9 @@
                 <td>{{ invoice.get_invoice_status_display }}</td>
                 <td>{{ invoice.invoice_total }}</td>
                 <td>
+                    <a href="{% url 'invoice_template' invoice.invoice_id %}" class="btn btn-success">Peržiūrėti</a>
+                </td>
+                <td>
                     <a href="{% url 'edit_invoice' invoice.invoice_id %}" class="btn btn-warning">Redaguoti sąskaitą</a>
                 </td>
                 <td>

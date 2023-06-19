@@ -315,6 +315,7 @@ def edit_company_info(request, pk):
     }
     return render(request, 'main_page.html', context)
 
+
 @login_required
 def edit_invoice(request, pk):
     invoice = Invoice.objects.get(invoice_id=pk)
@@ -442,3 +443,15 @@ def delete_client(request, pk):
         'current_route': resolve(request.path_info).url_name,
     }
     return render(request, 'main_page.html', context)
+
+
+# --------------------------------------------- INVOICE HTML TEMPLATE VIEW ---------------------------------------------
+@login_required
+def invoice_template(request, pk):
+    invoice_html_template = Invoice.objects.get(invoice_id=pk)
+    company_details = CompanyInfo.objects.get(company_id=1)
+    context = {
+        'invoice_html_template': invoice_html_template,
+        'company': company_details
+    }
+    return render(request, 'invoice_template.html', context)

@@ -33,6 +33,9 @@ urlpatterns = [
     path('company/', views.company_info, name='company_info'),
     path('company/add_company_info', views.add_company_info, name='add_company_info'),
     path('company/edit_company_info/<int:pk>', views.edit_company_info, name='edit_company_info'),
+    path('company/delete_company_info/<int:pk>', views.delete_company_info, name='delete_company_info'),
+    path('company/ajax_delete_company/', views.ajax_delete_company, name='ajax_delete_company'),
+
     # ----- TEMPLATES ------
     path('invoices/view_invoice_template/<int:pk>', views.invoice_template, name='invoice_template'),
     # ----- USER PROFILE ------

@@ -20,12 +20,10 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 from django.views.generic.base import RedirectView
-from django.contrib.auth.views import LoginView
+
 
 
 urlpatterns = [
-    # path('', LoginView.as_view()),
-    #path('/', views.index, name='index'),
     path('admin/', admin.site.urls),
     path('', include('InvoiceApp.index')),
     path('invoices/', include('InvoiceApp.urls')),

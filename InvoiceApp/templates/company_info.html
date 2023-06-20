@@ -1,6 +1,14 @@
+{% load static%}
+
 {% if user.is_authenticated %}
-    {% csrf_token %}
 <body>
+<script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+<script src="{% static 'js/delete/deleteCompany.js' %}"></script>
+<script>
+    var csrfToken = '{{ csrf_token }}';
+</script>
+
+
     {% if messages %}
       {% for message in messages %}
         {% if message.tags == 'error' %}
@@ -16,19 +24,22 @@
     {% endif %}
 
     <div>
-        <a href="{% url 'add_company_info' %}" class="btn btn-primary">Pridėti rekvizitus</a>
-        <a href="{% url 'edit_company_info' company.company_id %}" class="btn btn-warning">Redaguoti rekvizitus</a>
+        {% if company %}
+            <a href="{% url 'edit_company_info' company.company_id %}" class="btn btn-warning">Redaguoti rekvizitus</a>
+            <button type="button" class="btn btn-danger" onclick="deleteCompany('{{company.company_id}}')">Delete</button>
+        {% else %}
+            <a href="{% url 'add_company_info' %}" class="btn btn-primary">Pridėti rekvizitus</a>
+        {% endif %}
     </div>
     <div>
-
+        {% if company %}
         <h5><b>Įmonės pavadinimas:</b> {{ company.company_name }}</h5>
         <h5><b>Įmonės kodas:</b> {{ company.company_registration_number }}</h5>
         <h5><b>PVM kodas:</b> {{ company.company_vat_number }}</h5>
         <h5><b>Adresas:</b> {{ company.company_address }}</h5>
         <h5><b>El.paštas:</b> {{ company.company_email_address }}</h5>
         <h5><b>Telefono numeris:</b> {{ company.company_phone_number }}</h5>
-        {%comment%}<a href="{% url 'edit_company_info' company.company_id %}" class="btn btn-warning">Redaguoti rekvizitus</a>{%endcomment%}
-
+        {% endif %}
     </div>
 </body>
 {% endif %}

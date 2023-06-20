@@ -11,7 +11,7 @@
 
             {% csrf_token %}
             <fieldset class="form-group" style="width: 600px;">
-                <legend class="border-bottom mb-4">Testing</legend>
+                <legend class="border-bottom mb-4">Sąskaita: {{invoice_no}}</legend>
                 {{ form|crispy }}
             </fieldset>
 

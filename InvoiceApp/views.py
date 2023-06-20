@@ -14,6 +14,8 @@ from .forms import AddNewClientForm, AddNewProductForm, AddNewServiceForm, Creat
 from django.urls import resolve
 from django.shortcuts import render
 import json
+from django.http import JsonResponse
+from django.core.exceptions import PermissionDenied
 
 
 # ----------------------------------------- LOGIN, LOGOUT, REGISTRATION VIEWS ------------------------------------------
@@ -47,7 +49,7 @@ def register(request):
                         username=username, first_name=first_name, last_name=last_name,
                         email=email, password=password
                     )
-                    messages.info(request, f'Vartotojas {username} užregistruotas!')
+                    messages.info(request, f'Vartotojas {username} užregistruotas!\n Galite prisijungti!')
                     return redirect('login')
         else:
             messages.error(request, 'Slaptažodžiai nesutampa! Bandykite dar kartą.')
@@ -119,7 +121,14 @@ def main_page(request):
 
 @login_required
 def company_info(request):
-    company = CompanyInfo.objects.get(company_id=1)
+    try:
+        company = CompanyInfo.objects.all()
+        if len(company) > 0:
+            company = company[0]
+            print(company.company_id)
+    except company.DoesNotExist:
+        company = None
+
     context = {
         'current_route': resolve(request.path_info).url_name,
         'company': company,
@@ -182,7 +191,7 @@ def add_company_info(request):
             messages.success(request, 'Įmonės rekvizitai išsaugoti')
             return redirect('company_info')
         else:
-            messages.error(request, 'Nepavyko')
+            messages.error(request, 'Nepavyko pridėti rekvizitų. Būtina užpildyti visus formos laukelius!')
             return redirect('add_company_info')
     else:
         form = AddCompanyInfoForm()
@@ -446,12 +455,57 @@ def delete_client(request, pk):
     }
     return render(request, 'main_page.html', context)
 
+@login_required
+def delete_company_info(request, pk):
+    company_obj = CompanyInfo.objects.get(company_id=pk)
+    if request.method == 'POST':
+        company_obj.delete()
+        return redirect('company_info')
+    else:
+        raise PermissionDenied
+    # context = {
+    #     'current_route': resolve(request.path_info).url_name,
+    # }
+    # return render(request, 'main_page.html', context)
+
+# def ajax_delete_company(request):
+#     if request.is_ajax() and request.method == 'POST':
+#         company_id = int(request.POST.get('company_id'))
+#         company_object = CompanyInfo.objects.get(company_id=company_id)
+#         company_name = company_object.company_name
+#         company_object.delete()
+#
+#         confirmation = {
+#             'message': f"Company {company_id} : {company_name} deleted.",
+#             'redirect': f"/"
+#         }
+#         return JsonResponse(confirmation, safe=False)
+#
+#     else:
+#         raise PermissionDenied
+
+def ajax_delete_company(request):
+    if request.headers.get('x-requested-with') == 'XMLHttpRequest' and request.method == 'POST':
+        company_id = int(request.POST.get('company_id'))
+        company_object = CompanyInfo.objects.get(company_id=company_id)
+        company_name = company_object.company_name
+        company_object.delete()
+
+        confirmation = {
+            'message': f"Rekvizitai, kurių ID {company_id} ir įmonės pavadinimas '{company_name}', ištrinti!",
+            'redirect': f"/invoices/company/"
+        }
+        return JsonResponse(confirmation, safe=False)
+
+    else:
+        raise PermissionDenied
+
 
 # --------------------------------------------- INVOICE HTML TEMPLATE VIEW ---------------------------------------------
 @login_required
 def invoice_template(request, pk):
     invoice_html_template = Invoice.objects.get(invoice_id=pk)
-    company_details = CompanyInfo.objects.get(company_id=1)
+    company_details = CompanyInfo.objects.all()
     splitted_data = invoice_html_template.invoice_products_services.split('\n')
     print(splitted_data)
     context = {

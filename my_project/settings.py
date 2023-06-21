@@ -133,7 +133,7 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'InvoiceApp/static/media')
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-LOGIN_REDIRECT_URL = 'main_page'
+LOGIN_REDIRECT_URL = 'all_user_invoices'
 LOGIN_URL = 'login'
 LOGOUT_REDIRECT_URL = "logged_out"
 

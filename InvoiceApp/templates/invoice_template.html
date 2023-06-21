@@ -120,7 +120,7 @@ background-color:#eee;
                                 {% endfor %}
 
                                 <tr>
-                                    <th scope="row" colspan="4" class="border-0 text-end">Viso:</th>
+                                    <th scope="row" colspan="4" class="border-0 text-end"><h4 class="m-0 fw-semibold">Viso:</h4></th>
                                     <td class="border-0 text-end"><h4 class="m-0 fw-semibold">{{ invoice_html_template.invoice_total }}€</h4></td>
                                 </tr>
 
@@ -128,9 +128,10 @@ background-color:#eee;
                             </table>
                         </div>
                         <div class="py-2">
-                            <h5 class="font-size-15">Sąskaitą išrašė: {{ user.profile.responsibilities }} {{ user.get_full_name}}</h5>
+                            <h5 class="font-size-15">Sąskaitą išrašė: {{ invoice_html_template.user.profile.responsibilities }} {{ invoice_html_template.user.get_full_name }}</h5>
                             <p>Jeigu sąskaitoje radote neatitikimų, susisiekite su sąskaitą išrašiusiu asmeniu žemiau nurodytais kontaktais.<br>
-                            Telefonas: {{ user.profile.phone_number }} | El. paštas: {{ user.email }}</p>
+                            El. paštas: {{ invoice_html_template.user.email }}<br>
+                            Telefono nr.: {{ invoice_html_template.user.profile.phone_number }}</p>
                         </div>
                         <div class="d-print-none mt-4">
                             <div class="float-end">

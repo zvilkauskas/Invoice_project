@@ -161,6 +161,7 @@ class Invoice(models.Model):
     invoice_products_services = models.TextField(verbose_name="Sąskaitos prekės/paslaugos")
     # Related data
     client = models.ForeignKey(Client, verbose_name="Klientas", on_delete=models.SET_NULL, blank=False, null=True)
+    user = models.ForeignKey(User, on_delete=models.SET_NULL, blank=True, null=True)
     # product = models.ForeignKey(Product, verbose_name="Prekė", on_delete=models.SET_NULL, blank=True, null=True)
     # service = models.ForeignKey(Service, verbose_name="Paslauga", on_delete=models.SET_NULL, blank=True, null=True)
     # Additional data

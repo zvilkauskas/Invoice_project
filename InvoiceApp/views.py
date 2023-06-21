@@ -16,6 +16,7 @@ from django.shortcuts import render
 import json
 from django.http import JsonResponse
 from django.core.exceptions import PermissionDenied
+from django.db.models import Q
 
 
 # ----------------------------------------- LOGIN, LOGOUT, REGISTRATION VIEWS ------------------------------------------
@@ -83,7 +84,7 @@ def login(request):
 
         if user is not None:
             auth.login(request, user)
-            return redirect('main_page')
+            return redirect('all_user_invoices')
         else:
             context['form'] = form
             messages.error(request, 'Blogi prisijungimo duomenys')
@@ -97,6 +98,7 @@ def logged_out(request):
 
 
 def search(request):
+
     pass
 
 
@@ -106,14 +108,17 @@ def index(request):
     return render(request, 'index.html', context)
 
 
+# This page is not displayed
 @login_required
 def main_page(request):
+    user = request.user
     current_route = resolve(request.path_info).url_name
     title = 'Pagrindinis'
 
     context = {
         'current_route': current_route,
         'title': title,
+        'user': user,
     }
 
     return render(request, 'main_page.html', context)
@@ -140,6 +145,7 @@ def company_info(request):
 @login_required
 def clients(request):
     clients = Client.objects.all()
+
     context = {
         'clients': clients,
         'current_route': resolve(request.path_info).url_name,
@@ -151,6 +157,7 @@ def clients(request):
 @login_required
 def products(request):
     products = Product.objects.all()
+
     context = {
         'products': products,
         'current_route': resolve(request.path_info).url_name,
@@ -162,6 +169,7 @@ def products(request):
 @login_required
 def services(request):
     services = Service.objects.all()
+
     context = {
         'services': services,
         'current_route': resolve(request.path_info).url_name,
@@ -173,10 +181,11 @@ def services(request):
 @login_required
 def invoices(request):
     invoices = Invoice.objects.all().order_by('-invoice_number')
+
     context = {
         'invoices': invoices,
         'current_route': resolve(request.path_info).url_name,
-        'title': 'Sąskaitos'
+        'title': 'Visos sąskaitos'
     }
     return render(request, 'main_page.html', context)
 
@@ -195,6 +204,7 @@ def add_company_info(request):
             return redirect('add_company_info')
     else:
         form = AddCompanyInfoForm()
+
         context = {
             'current_route': resolve(request.path_info).url_name,
             'title': 'Įmonės rekvizitai',
@@ -216,6 +226,7 @@ def add_client(request):
             return redirect('add_client')
     else:
         form = AddNewClientForm()
+
         context = {
             'current_route': resolve(request.path_info).url_name,
             'title': 'Klientai',
@@ -238,6 +249,7 @@ def add_product(request):
             return redirect('add_product')
     else:
         form = AddNewProductForm()
+
         context = {
             'current_route': resolve(request.path_info).url_name,
             'title': 'Prekės',
@@ -260,6 +272,7 @@ def add_service(request):
             return redirect('add_service')
     else:
         form = AddNewServiceForm()
+
         context = {
             'current_route': resolve(request.path_info).url_name,
             'title': 'Paslaugos',
@@ -268,7 +281,7 @@ def add_service(request):
     return render(request, 'main_page.html', context)
 
 
-@login_required
+@login_required(login_url='login')
 def create_full_invoice(request):
     if request.method == 'POST':
         # gauname rezultata is JS
@@ -278,14 +291,16 @@ def create_full_invoice(request):
         # sukuriamas naujas stringas, kuriame graziai israsoma saskaitos informacija
         pretty_string = ""
         for element in list_of_p_s:
-            pretty_string += f"Prekė: {element['name']}, Kiekis: {element['quantity']}vnt., " \
+            pretty_string += f"{element['name']}, Kiekis: {element['quantity']}vnt., " \
                              f"Kaina: {element['price']}€, Suma: {element['total']}€\n"
 
         invoice_form = CreateNewInvoiceForm(request.POST)
         # sukurtas forms.py metodas set_invoice_products_services, kuris leidzia django pakeisti duomenis
         invoice_form.set_invoice_products_services(pretty_string)
         if invoice_form.is_valid():
-            invoice_form.save()
+            invoice = invoice_form.save(commit=False)
+            invoice.user = request.user
+            invoice.save()
             messages.success(request, 'Sąskaita išsaugota')
             return redirect('invoices')
         else:
@@ -318,6 +333,7 @@ def edit_company_info(request, pk):
             return redirect('company_info')
     else:
         form = EditCompanyInfoForm(instance=company_object)
+
     context = {
         'current_route': resolve(request.path_info).url_name,
         'title': 'Įmonės rekvizitų redagavimas',
@@ -338,6 +354,7 @@ def edit_invoice(request, pk):
             return redirect('invoices')
     else:
         form = EditInvoiceForm(instance=invoice)
+
     context = {
         'current_route': resolve(request.path_info).url_name,
         'title': 'Sąskaitos redagavimas',
@@ -357,6 +374,7 @@ def edit_product(request, pk):
             return redirect('products')
     else:
         form = EditProductForm(instance=product)
+
     context = {
         'current_route': resolve(request.path_info).url_name,
         'title': 'Produkto redagavimas',
@@ -376,6 +394,7 @@ def edit_service(request, pk):
             return redirect('services')
     else:
         form = EditServiceForm(instance=service)
+
     context = {
         'current_route': resolve(request.path_info).url_name,
         'title': 'Paslaugos redagavimas',
@@ -395,6 +414,7 @@ def edit_client(request, pk):
             return redirect('clients')
     else:
         form = EditClientForm(instance=client)
+
     context = {
         'current_route': resolve(request.path_info).url_name,
         'title': 'Kliento redagavimas',
@@ -455,6 +475,7 @@ def delete_client(request, pk):
     }
     return render(request, 'main_page.html', context)
 
+
 @login_required
 def delete_company_info(request, pk):
     company_obj = CompanyInfo.objects.get(company_id=pk)
@@ -468,21 +489,6 @@ def delete_company_info(request, pk):
     # }
     # return render(request, 'main_page.html', context)
 
-# def ajax_delete_company(request):
-#     if request.is_ajax() and request.method == 'POST':
-#         company_id = int(request.POST.get('company_id'))
-#         company_object = CompanyInfo.objects.get(company_id=company_id)
-#         company_name = company_object.company_name
-#         company_object.delete()
-#
-#         confirmation = {
-#             'message': f"Company {company_id} : {company_name} deleted.",
-#             'redirect': f"/"
-#         }
-#         return JsonResponse(confirmation, safe=False)
-#
-#     else:
-#         raise PermissionDenied
 
 def ajax_delete_company(request):
     if request.headers.get('x-requested-with') == 'XMLHttpRequest' and request.method == 'POST':
@@ -505,18 +511,22 @@ def ajax_delete_company(request):
 @login_required
 def invoice_template(request, pk):
     invoice_html_template = Invoice.objects.get(invoice_id=pk)
-    company_details = CompanyInfo.objects.all()
+
+    company_details = CompanyInfo.objects.first()
+
     splitted_data = invoice_html_template.invoice_products_services.split('\n')
     print(splitted_data)
+
     context = {
         'invoice_html_template': invoice_html_template,
         'company': company_details,
-        'splitted_data': splitted_data
+        'splitted_data': splitted_data,
+        # 'user': user
     }
     return render(request, 'invoice_template.html', context)
 
 
-# ------------------------------------------------- USER PROFILE VIEW --------------------------------------------------
+# ------------------------------------------------- USER PROFILE, USER INVOICES VIEWS --------------------------------------------------
 @login_required
 def profile(request):
     if request.method == 'POST':
@@ -538,3 +548,34 @@ def profile(request):
         'profile_form': profile_form
     }
     return render(request, 'main_page.html', context)
+
+
+@login_required
+def all_user_invoices(request):
+    user = request.user
+    user_invoices = Invoice.objects.filter(user=user)
+
+    context = {
+        'current_route': resolve(request.path_info).url_name,
+        'title': 'Mano sąskaitos',
+        'user': user,
+        'user_invoices': user_invoices
+    }
+    return render(request, 'main_page.html', context)
+
+# @login_required
+# def main_page(request):
+#     user = request.user
+#     user_invoices = Invoice.objects.filter(user=user)
+#
+#     current_route = resolve(request.path_info).url_name
+#     title = 'Pagrindinis'
+#
+#     context = {
+#         'current_route': current_route,
+#         'title': title,
+#         'user': user,
+#         'user_invoices': user_invoices
+#     }
+#
+#     return render(request, 'main_page.html', context)

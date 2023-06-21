@@ -1,25 +1,6 @@
 {% if user.is_authenticated %}
 {% csrf_token %}
 <body>
-
-    {% if messages %}
-      {% for message in messages %}
-        {% if message.tags == 'error' %}
-          <div class="alert alert-danger">
-            {{ message }}
-          </div>
-        {% else %}
-          <div class="alert alert-{{ message.tags }}">
-            {{ message }}
-          </div>
-        {% endif %}
-      {% endfor %}
-    {% endif %}
-
-    <div>
-        <a href="{% url 'create_invoice' %}" class="btn btn-primary">Ruošti sąskaitą</a>
-    </div>
-
     <div class="table-responsive">
         <table class="table table-striped table-sm">
             <thead>
@@ -30,14 +11,14 @@
                     <th scope="col">Apmokėti iki</th>
                     <th scope="col">Statusas</th>
                     <th scope="col">Sąskaitos suma</th>
-                    <th scope="col">Sąskaitą išrašė</th>
                     <th></th>
                     <th></th>
                 </tr>
             </thead>
 
             <tbody>
-            {% for invoice in invoices %}
+
+            {% for invoice in user_invoices %}
             <tr>
                 <td>{{ invoice.invoice_number }}</td>
                 <td>{{ invoice.client.client_name }}</td>
@@ -45,7 +26,6 @@
                 <td>{{ invoice.due_date|date:"Y-m-d"}}</td>
                 <td>{{ invoice.get_invoice_status_display }}</td>
                 <td>{{ invoice.invoice_total }}€</td>
-                <td>{{ invoice.user.first_name }} {{ invoice.user.last_name }}</td>
                 <td>
                     <a href="{% url 'invoice_template' invoice.invoice_id %}" class="btn btn-success">Peržiūrėti</a>
                 </td>

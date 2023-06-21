@@ -134,7 +134,7 @@ class UserUpdateForm(forms.ModelForm):
         model = User
         fields = ('username', 'first_name', 'last_name', 'email')
         widgets = {
-            'username': forms.TextInput(attrs={
+            'username': forms.HiddenInput(attrs={
                 'readonly': True
             })
         }

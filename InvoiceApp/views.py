@@ -98,7 +98,16 @@ def logged_out(request):
 
 
 def search(request):
+    query = request.GET.get('query')
+    client_search = Client.objects.filter(Q(client_name__icontains=query) | Q(registration_number__icontains=query))
+    product_search = Product.objects.filter(Q(product_name__icontains=query) | Q(product_code__icontains=query))
+    service_search = Service.objects.filter(Q(service_name__icontains=query) | Q(service_code__icontains=query))
+    invoice_search = Invoice.objects.filter(Q(invoice_number__icontains=query) | Q(date_created__icontains=query))
 
+    context = {
+        'query': query,
+
+    }
     pass
 
 
@@ -562,20 +571,3 @@ def all_user_invoices(request):
         'user_invoices': user_invoices
     }
     return render(request, 'main_page.html', context)
-
-# @login_required
-# def main_page(request):
-#     user = request.user
-#     user_invoices = Invoice.objects.filter(user=user)
-#
-#     current_route = resolve(request.path_info).url_name
-#     title = 'Pagrindinis'
-#
-#     context = {
-#         'current_route': current_route,
-#         'title': title,
-#         'user': user,
-#         'user_invoices': user_invoices
-#     }
-#
-#     return render(request, 'main_page.html', context)

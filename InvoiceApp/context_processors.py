@@ -5,7 +5,6 @@ def company_name(request):
         company = CompanyInfo.objects.all()
         if len(company) > 0:
             company = company[0]
-            print(company.company_id)
     except company.DoesNotExist:
         company = None
 

@@ -27,7 +27,6 @@ background-color:#eee;
     border-radius: 1rem;
 }
 
-
     </style>
 </head>
 <body>
@@ -98,24 +97,24 @@ background-color:#eee;
                                 <tr>
                                     <th style="width: 70px;">Eil. nr.</th>
                                     <th>Prekė/Paslauga</th>
-                                    <th>Kaina</th>
-                                    <th>Kiekis</th>
+                                    <th class="text-end" style="width: 120px;">Kaina</th>
+                                    <th class="text-end" style="width: 120px;">Kiekis</th>
                                     <th class="text-end" style="width: 120px;">Suma</th>
                                 </tr>
                                 </thead>
                                 <tbody>
 
-                                {% for line in splitted_data %}
+                                {% for item in result %}
                                 <tr>
                                     <th scope="row">{{ forloop.counter }}</th>
                                     <td>
                                         <div>
-                                            <p class="text-truncate font-size-14 mb-1">{{line}}</p>
+                                            <p class="text-truncate font-size-14 mb-1">{{item.Name}}</p>
                                         </div>
                                     </td>
-                                    <td>$ 245.50</td>
-                                    <td>1</td>
-                                    <td class="text-end">$ 245.50</td>
+                                    <td class="text-end">{{item.Price}}</td>
+                                    <td class="text-end">{{item.Qty}}</td>
+                                    <td class="text-end">{{item.Total}}</td>
                                 </tr>
                                 {% endfor %}
 

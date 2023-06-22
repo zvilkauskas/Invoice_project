@@ -138,6 +138,11 @@ class UserUpdateForm(forms.ModelForm):
                 'readonly': True
             })
         }
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['first_name'].label = 'Vardas'
+        self.fields['last_name'].label = 'Pavardė'
+        self.fields['email'].label = 'El. paštas'
 
 class ProfileUpdateForm(forms.ModelForm):
     class Meta:

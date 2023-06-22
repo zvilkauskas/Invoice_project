@@ -10,5 +10,5 @@ def company_name(request):
         company = None
 
     return {
-        'company_name': company.company_name if company else 'Įmonės rekvizitai',
+        'company_name': company.company_name if company else 'Įmonės pavadinimas',
     }

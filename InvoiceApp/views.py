@@ -139,7 +139,6 @@ def company_info(request):
         company = CompanyInfo.objects.all()
         if len(company) > 0:
             company = company[0]
-            print(company.company_id)
     except company.DoesNotExist:
         company = None
 
@@ -300,8 +299,8 @@ def create_full_invoice(request):
         # sukuriamas naujas stringas, kuriame graziai israsoma saskaitos informacija
         pretty_string = ""
         for element in list_of_p_s:
-            pretty_string += f"{element['name']}, Kiekis: {element['quantity']}vnt., " \
-                             f"Kaina: {element['price']}€, Suma: {element['total']}€\n"
+            pretty_string += f"Name: {element['name']}, Qty: {element['quantity']}vnt., " \
+                             f"Price: {element['price']}€, Total: {element['total']}€\n"
 
         invoice_form = CreateNewInvoiceForm(request.POST)
         # sukurtas forms.py metodas set_invoice_products_services, kuris leidzia django pakeisti duomenis
@@ -520,16 +519,24 @@ def ajax_delete_company(request):
 @login_required
 def invoice_template(request, pk):
     invoice_html_template = Invoice.objects.get(invoice_id=pk)
-
     company_details = CompanyInfo.objects.first()
-
     splitted_data = invoice_html_template.invoice_products_services.split('\n')
-    print(splitted_data)
+
+    result = []
+    for item in splitted_data:
+        attributes = {}
+        pairs = item.split(', ')
+
+        for pair in pairs:
+            key, value = pair.split(': ')
+            attributes[key.strip()] = value.strip()
+        result.append(attributes)
 
     context = {
         'invoice_html_template': invoice_html_template,
         'company': company_details,
         'splitted_data': splitted_data,
+        'result': result
         # 'user': user
     }
     return render(request, 'invoice_template.html', context)
@@ -562,7 +569,7 @@ def profile(request):
 @login_required
 def all_user_invoices(request):
     user = request.user
-    user_invoices = Invoice.objects.filter(user=user)
+    user_invoices = Invoice.objects.filter(user=user).order_by('-invoice_number')
 
     context = {
         'current_route': resolve(request.path_info).url_name,

@@ -1,7 +1,6 @@
 {% if user.is_authenticated %}
 {% csrf_token %}
 <body>
-
     {% if messages %}
       {% for message in messages %}
         {% if message.tags == 'error' %}
@@ -18,7 +17,7 @@
     <div>
         <a href="{% url 'add_client' %}" class="btn btn-primary">Pridėti klientą</a>
     </div>
-
+    {% if clients|length > 0 %}
     <div class="table-responsive">
         <table class="table table-striped table-sm">
             <thead>
@@ -44,7 +43,7 @@
                 <td>{{ client.email_address }}</td>
                 <td>{{ client.phone_number }}</td>
                 <td>
-                    <a href="{% url 'edit_client' client.client_id %}" class="btn btn-warning">Redaguoti klientą</a>
+                    <a href="{% url 'edit_client' client.client_id %}" class="btn btn-warning">Redaguoti</a>
                 </td>
                 <td>
                     <a href="{% url 'delete_client' client.client_id %}" class="btn btn-danger">Trinti</a>
@@ -53,6 +52,13 @@
             {% endfor %}
             </tbody>
         </table>
-    </div>
+    {% else %}
+            <div class="row">
+                <div class="col-lg-8">
+                    <h5>Klientų nėra. Pridėkite pirmąjį klientą spausdami aukščiau esantį mygtuką.</h5>
+                </div>
+            </div>
+        </div>
+    {% endif %}
 </body>
 {% endif %}

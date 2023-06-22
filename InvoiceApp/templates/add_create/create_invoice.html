@@ -12,7 +12,7 @@
 <div class="content-section">
     <form method="POST">
         {% csrf_token %}
-
+        <legend class="border-bottom mb-4">Parduodamų prekių ir paslaugų pasirinkimas</legend>
         <select name="products" class="form-select short_input" id="select-box2">
             <option selected disabled="true" value="">Pasirinkite prekę...</option>
 
@@ -73,11 +73,9 @@
                 </tbody>
             </table>
         </div>
-
-
-
+        <br>
         <fieldset class="form-group" style="width: 300px;">
-            <legend class="border-bottom mb-4">Testing</legend>
+            <legend class="border-bottom mb-4">Sąskaitos detalės</legend>
             {{ invoice_form|crispy }}
         </fieldset>
 

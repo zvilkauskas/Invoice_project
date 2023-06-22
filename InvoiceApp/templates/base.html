@@ -92,6 +92,9 @@
                     .bd-mode-toggle {
                       z-index: 1500;
                     }
+                    .width-70{
+                        width:70%;
+                    }
                 </style>
 
 <!--                <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">-->
@@ -111,11 +114,11 @@
 <!--                </svg>-->
 
                 <header class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0 shadow">
-                  <a class="navbar-brand col-md-3 col-lg-2 me-0 px-3 fs-6" href="{% url 'main_page'%}">Įmonės pavadinimas</a>
+                  <a class="navbar-brand col-md-3 col-lg-2 me-0 px-3 fs-6" >{{ company_name }}</a>
                   <button class="navbar-toggler position-absolute d-md-none collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                   </button>
-                  <form action="{% url 'search' %}" method="GET">
+                  <form action="{% url 'search' %}" method="GET" class="width-70">
                       {% csrf_token %}
                     <input class="form-control me-2" type="search" placeholder="Paieška" aria-label="Search">
                   </form>

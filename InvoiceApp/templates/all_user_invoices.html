@@ -1,44 +1,52 @@
 {% if user.is_authenticated %}
 {% csrf_token %}
 <body>
-    <div class="table-responsive">
-        <table class="table table-striped table-sm">
-            <thead>
+    {% if user_invoices|length > 0 %}
+        <div class="table-responsive">
+            <table class="table table-striped table-sm">
+                <thead>
+                    <tr>
+                        <th scope="col">Sąskaitos numeris</th>
+                        <th scope="col">Gavėjas</th>
+                        <th scope="col">Išrašymo data</th>
+                        <th scope="col">Apmokėti iki</th>
+                        <th scope="col">Statusas</th>
+                        <th scope="col">Sąskaitos suma</th>
+                        <th></th>
+                        <th></th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                {% for invoice in user_invoices %}
                 <tr>
-                    <th scope="col">Sąskaitos numeris</th>
-                    <th scope="col">Gavėjas</th>
-                    <th scope="col">Išrašymo data</th>
-                    <th scope="col">Apmokėti iki</th>
-                    <th scope="col">Statusas</th>
-                    <th scope="col">Sąskaitos suma</th>
-                    <th></th>
-                    <th></th>
+                    <td>{{ invoice.invoice_number }}</td>
+                    <td>{{ invoice.client.client_name }}</td>
+                    <td>{{ invoice.date_created|date:"Y-m-d" }}</td>
+                    <td>{{ invoice.due_date|date:"Y-m-d"}}</td>
+                    <td>{{ invoice.get_invoice_status_display }}</td>
+                    <td>{{ invoice.invoice_total }}€</td>
+                    <td>
+                        <a href="{% url 'invoice_template' invoice.invoice_id %}" class="btn btn-success">Peržiūrėti</a>
+                    </td>
+                    <td>
+                        <a href="{% url 'edit_invoice' invoice.invoice_id %}" class="btn btn-warning">Redaguoti</a>
+                    </td>
+                    <td>
+                        <a href="{% url 'delete_invoice' invoice.invoice_id %}" class="btn btn-danger">Trinti</a>
+                    </td>
                 </tr>
-            </thead>
-
-            <tbody>
-
-            {% for invoice in user_invoices %}
-            <tr>
-                <td>{{ invoice.invoice_number }}</td>
-                <td>{{ invoice.client.client_name }}</td>
-                <td>{{ invoice.date_created|date:"Y-m-d" }}</td>
-                <td>{{ invoice.due_date|date:"Y-m-d"}}</td>
-                <td>{{ invoice.get_invoice_status_display }}</td>
-                <td>{{ invoice.invoice_total }}€</td>
-                <td>
-                    <a href="{% url 'invoice_template' invoice.invoice_id %}" class="btn btn-success">Peržiūrėti</a>
-                </td>
-                <td>
-                    <a href="{% url 'edit_invoice' invoice.invoice_id %}" class="btn btn-warning">Redaguoti</a>
-                </td>
-                <td>
-                    <a href="{% url 'delete_invoice' invoice.invoice_id %}" class="btn btn-danger">Trinti</a>
-                </td>
-            </tr>
-            {% endfor %}
-            </tbody>
-        </table>
-    </div>
+                {% endfor %}
+                </tbody>
+            </table>
+    {% else %}
+        <div class="row">
+            <div class="col-lg-8">
+                <h5>{{ user.first_name }} dar neturi paruošęs nė vienos sąskaitos. Spauskite <a href="{% url 'create_invoice' %}">čia</a> norėdami paruošti savo pirmąją sąskaitą.</h5>
+            </div>
+        </div>
+    {% endif %}
+        </div>
 </body>
 {% endif %}

@@ -1,6 +1,8 @@
+{% load static%}
 {% if user.is_authenticated %}
-
-    <div>
+<body>
+<link href="{% static 'css/medium_field.css' %}" rel="stylesheet">
+    <div class="medium_input">
         <form method="POST">
             {% csrf_token %}
             <div class="form-group">
@@ -43,9 +45,5 @@
             <a href="{% url 'clients' %}" class="btn btn-secondary">Grįžti</a>
         </form>
     </div>
-    <style>
-        Input {max-width: 310px;}
-        TextArea {max-width: 310px;}
-    </style>
-
+</body>
 {% endif %}

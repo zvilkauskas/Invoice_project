@@ -1,6 +1,8 @@
+{% load static%}
 {% if user.is_authenticated %}
 {% csrf_token %}
 <body>
+<link href="{% static 'css/search_width.css' %}" rel="stylesheet">
     {% if messages %}
       {% for message in messages %}
         {% if message.tags == 'error' %}
@@ -14,8 +16,17 @@
         {% endif %}
       {% endfor %}
     {% endif %}
-    <div>
-        <a href="{% url 'add_product' %}" class="btn btn-primary">Pridėti prekę</a>
+    <div class="inline">
+        <div class="d-inline-block">
+            <a href="{% url 'add_product' %}" class="btn btn-primary">Pridėti prekę</a>
+        </div>
+        <form action="{% url 'search' %}" method="GET" class="d-inline-block width-20">
+            {% csrf_token %}
+            <div class="input-group">
+                <input class="form-control me-2" type="search" placeholder="Prekių paieška" aria-label="Search">
+                <button class="btn btn-outline-secondary" type="submit">Ieškoti</button>
+            </div>
+        </form>
     </div>
     {% if products|length > 0 %}
         <div class="table-responsive">
@@ -37,9 +48,9 @@
                 <tr>
                     <td>{{ product.product_name }}</td>
                     <td>{{ product.product_code }}</td>
-                    <td>{{ product.product_description }}</td>
-                    <td>{{ product.product_quantity }}</td>
-                    <td>{{ product.product_price }}</td>
+                    <td>{{ product.product_description|default:'Nenurodyta' }}</td>
+                    <td>{{ product.product_quantity|default:'Nenurodyta' }}</td>
+                    <td>{{ product.product_price|default:'Nenurodyta'|floatformat:2 }}</td>
                     <td>
                         <a href="{% url 'edit_product' product.product_id %}" class="btn btn-warning">Redaguoti</a>
                     </td>

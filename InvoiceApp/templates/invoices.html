@@ -1,6 +1,8 @@
+{% load static%}
 {% if user.is_authenticated %}
 {% csrf_token %}
 <body>
+<link href="{% static 'css/search_width.css' %}" rel="stylesheet">
     {% if messages %}
       {% for message in messages %}
         {% if message.tags == 'error' %}
@@ -14,8 +16,17 @@
         {% endif %}
       {% endfor %}
     {% endif %}
-    <div>
-        <a href="{% url 'create_invoice' %}" class="btn btn-primary">Ruošti sąskaitą</a>
+    <div class="inline">
+        <div class="d-inline-block">
+            <a href="{% url 'create_invoice' %}" class="btn btn-primary">Ruošti sąskaitą</a>
+        </div>
+        <form action="{% url 'search' %}" method="GET" class="d-inline-block width-20">
+            {% csrf_token %}
+            <div class="input-group">
+                <input class="form-control me-2" type="search" placeholder="Sąskaitų paieška" aria-label="Search">
+                <button class="btn btn-outline-secondary" type="submit">Ieškoti</button>
+            </div>
+        </form>
     </div>
     {% if invoices|length > 0 %}
         <div class="table-responsive">
@@ -42,7 +53,7 @@
                     <td>{{ invoice.date_created|date:"Y-m-d H:i" }}</td>
                     <td>{{ invoice.due_date|date:"Y-m-d"}}</td>
                     <td>{{ invoice.get_invoice_status_display }}</td>
-                    <td>{{ invoice.invoice_total }}</td>
+                    <td>{{ invoice.invoice_total|floatformat:2 }}€</td>
                     <td>{{ invoice.user.first_name }} {{ invoice.user.last_name }}</td>
                     <td>
                         <a href="{% url 'invoice_template' invoice.invoice_id %}" class="btn btn-success">Peržiūrėti</a>

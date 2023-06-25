@@ -8,7 +8,6 @@ urlpatterns = [
     path('account/', include('django.contrib.auth.urls')),
     path('register/', views.register, name='register'),
     path('logged_out/', views.logged_out, name='logged_out'),
-    path('search/', views.search, name='search'),
     path('main_page/', views.main_page, name='main_page'),
     # ----- CLIENT URLS -----
     path('clients/', views.clients, name='clients'),
@@ -36,10 +35,15 @@ urlpatterns = [
     path('company/edit_company_info/<int:pk>', views.edit_company_info, name='edit_company_info'),
     path('company/delete_company_info/<int:pk>', views.delete_company_info, name='delete_company_info'),
     path('company/ajax_delete_company/', views.ajax_delete_company, name='ajax_delete_company'),
-
     # ----- TEMPLATES ------
     path('invoices/view_invoice_template/<int:pk>', views.invoice_template, name='invoice_template'),
-    # ----- USER PROFILE AND INVOICES------
+    # ----- USER: PROFILE AND INVOICES------
     path('profile/', views.profile, name='profile'),
     path('all_user_invoices/', views.all_user_invoices, name='all_user_invoices'),
+    # ----- SEARCH URLS ------
+    path('search/', views.search, name='search'),
+    path('search_clients/', views.search_clients, name='search_clients'),
+    path('search_products/', views.search_products, name='search_products'),
+    path('search_services/', views.search_services, name='search_services'),
+    path('search_invoices/', views.search_invoices, name='search_invoices'),
 ]

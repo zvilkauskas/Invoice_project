@@ -17,6 +17,7 @@ import json
 from django.http import JsonResponse
 from django.core.exceptions import PermissionDenied
 from django.db.models import Q
+from django.http import HttpResponse
 
 
 # ----------------------------------------- LOGIN, LOGOUT, REGISTRATION VIEWS ------------------------------------------
@@ -95,20 +96,6 @@ def login(request):
 def logged_out(request):
     logout(request)
     return render(request, 'logged_out.html')
-
-
-def search(request):
-    query = request.GET.get('query')
-    client_search = Client.objects.filter(Q(client_name__icontains=query) | Q(registration_number__icontains=query))
-    product_search = Product.objects.filter(Q(product_name__icontains=query) | Q(product_code__icontains=query))
-    service_search = Service.objects.filter(Q(service_name__icontains=query) | Q(service_code__icontains=query))
-    invoice_search = Invoice.objects.filter(Q(invoice_number__icontains=query) | Q(date_created__icontains=query))
-
-    context = {
-        'query': query,
-
-    }
-    pass
 
 
 # --------------------- INDEX, MAIN PAGE, COMPANY INFO, CLIENTS, PRODUCTS, SERVICES, INVOICES VIEWS --------------------
@@ -542,7 +529,7 @@ def invoice_template(request, pk):
     return render(request, 'invoice_template.html', context)
 
 
-# ------------------------------------------------- USER PROFILE, USER INVOICES VIEWS --------------------------------------------------
+# ----------------------------------------- USER PROFILE, USER INVOICES VIEWS ------------------------------------------
 @login_required
 def profile(request):
     if request.method == 'POST':
@@ -578,3 +565,43 @@ def all_user_invoices(request):
         'user_invoices': user_invoices
     }
     return render(request, 'main_page.html', context)
+
+
+# ---------------------------------------------------- SEARCH VIEWS ----------------------------------------------------
+
+def search(request):
+    pass
+
+
+@login_required
+def search_clients(request):
+    if request.method == 'POST':
+        searched = request.POST['searched']
+        clients = Client.objects.filter(client_name__icontains=searched, registration_number__icontains=searched)
+
+        context = {
+            'current_route': resolve(request.path_info).url_name,
+            'searched': searched,
+            'clients': clients,
+        }
+    return render(request, 'main_page.html', context)
+
+
+@login_required
+def search_products(request):
+    query = request.GET.get('query')
+    search_results = Product.objects.filter(Q(product_name__icontains=query) | Q(product_code__icontains=query))
+    return render(request, 'search/search_products.html', {'products': search_results, 'query': query})
+
+
+def search_services(request):
+    query = request.GET.get('query')
+    search_results = Service.objects.filter(Q(service_name__icontains=query) | Q(service_code__icontains=query))
+    return render(request, 'search/search_services.html', {'services': search_results, 'query': query})
+
+
+@login_required
+def search_invoices(request):
+    query = request.GET.get('query')
+    search_results = Invoice.objects.filter(Q(invoice_number__icontains=query) | Q(date_created__icontains=query))
+    return render(request, 'search/search_invoices.html', {'invoices': search_results, 'query': query})

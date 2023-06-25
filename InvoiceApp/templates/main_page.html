@@ -89,6 +89,19 @@
     {% elif current_route == 'all_user_invoices' %}
         {% include "all_user_invoices.html" %}
 
+<!--    Search clients, products, services, invoices -->
+    {% elif current_route == 'search_clients' %}
+        {% include "search/search_clients.html" %}
+
+    {% elif current_route == 'search_products' %}
+        {% include "search/search_products.html" %}
+
+    {% elif current_route == 'search_services' %}
+        {% include "search/search_services.html" %}
+
+    {% elif current_route == 'search_invoices' %}
+        {% include "search/search_invoices.html" %}
+
     {% endif %}
 
 </main>

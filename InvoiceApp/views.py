@@ -507,16 +507,27 @@ def ajax_delete_company(request):
 def invoice_template(request, pk):
     invoice_html_template = Invoice.objects.get(invoice_id=pk)
     company_details = CompanyInfo.objects.first()
+    # Splits data by new line symbol
     splitted_data = invoice_html_template.invoice_products_services.split('\n')
-
+    print(splitted_data)
     result = []
+    # Splits by ,
     for item in splitted_data:
         attributes = {}
         pairs = item.split(', ')
 
+        # Splits by :
         for pair in pairs:
             key, value = pair.split(': ')
             attributes[key.strip()] = value.strip()
+        # Replaces € to an empty space
+        price_value = attributes.get('Price', '0.00').replace('€', '')
+        # Converts 'Price' value to float
+        attributes['Price'] = float(price_value)
+        # Replaces € to an empty space
+        total_value = attributes.get('Total', '0.00').replace('€', '')
+        # Converts 'Total' value to float
+        attributes['Total'] = float(total_value)
         result.append(attributes)
 
     context = {
@@ -524,7 +535,6 @@ def invoice_template(request, pk):
         'company': company_details,
         'splitted_data': splitted_data,
         'result': result
-        # 'user': user
     }
     return render(request, 'invoice_template.html', context)
 
@@ -567,9 +577,10 @@ def all_user_invoices(request):
     return render(request, 'main_page.html', context)
 
 
-# ---------------------------------------------------- SEARCH VIEWS ----------------------------------------------------
+# -------------------------- SEARCH CLIENTS, PRODUCTS, SERVICES, INVOICES, USER INVOICES VIEWS -------------------------
 
 def search(request):
+
     pass
 
 
@@ -577,7 +588,10 @@ def search(request):
 def search_clients(request):
     if request.method == 'POST':
         searched = request.POST['searched']
-        clients = Client.objects.filter(client_name__icontains=searched, registration_number__icontains=searched)
+        clients = Client.objects.filter(
+            Q(client_name__icontains=searched) | Q(registration_number__icontains=searched) |
+            Q(vat_number__icontains=searched) | Q(address__icontains=searched) | Q(email_address__icontains=searched)
+        )
 
         context = {
             'current_route': resolve(request.path_info).url_name,
@@ -589,19 +603,65 @@ def search_clients(request):
 
 @login_required
 def search_products(request):
-    query = request.GET.get('query')
-    search_results = Product.objects.filter(Q(product_name__icontains=query) | Q(product_code__icontains=query))
-    return render(request, 'search/search_products.html', {'products': search_results, 'query': query})
+    if request.method == 'POST':
+        searched = request.POST['searched']
+        products = Product.objects.filter(
+            Q(product_name__icontains=searched) | Q(product_code__icontains=searched)
+        )
+
+        context = {
+            'current_route': resolve(request.path_info).url_name,
+            'searched': searched,
+            'products': products,
+        }
+    return render(request, 'main_page.html', context)
 
 
 def search_services(request):
-    query = request.GET.get('query')
-    search_results = Service.objects.filter(Q(service_name__icontains=query) | Q(service_code__icontains=query))
-    return render(request, 'search/search_services.html', {'services': search_results, 'query': query})
+    if request.method == 'POST':
+        searched = request.POST['searched']
+        services = Service.objects.filter(
+            Q(service_name__icontains=searched) | Q(service_code__icontains=searched)
+        )
+
+        context = {
+            'current_route': resolve(request.path_info).url_name,
+            'searched': searched,
+            'services': services,
+        }
+    return render(request, 'main_page.html', context)
 
 
 @login_required
 def search_invoices(request):
-    query = request.GET.get('query')
-    search_results = Invoice.objects.filter(Q(invoice_number__icontains=query) | Q(date_created__icontains=query))
-    return render(request, 'search/search_invoices.html', {'invoices': search_results, 'query': query})
+    if request.method == 'POST':
+        searched = request.POST['searched']
+        invoices = Invoice.objects.filter(
+            Q(invoice_number__icontains=searched) | Q(client__client_name__icontains=searched) |
+            Q(date_created__icontains=searched) | Q(due_date__icontains=searched)
+        )
+
+        context = {
+            'current_route': resolve(request.path_info).url_name,
+            'searched': searched,
+            'invoices': invoices,
+        }
+    return render(request, 'main_page.html', context)
+
+
+@login_required
+def search_user_invoices(request):
+    if request.method == 'POST':
+        searched = request.POST['searched']
+        user = request.user
+        user_invoices = Invoice.objects.filter(
+            Q(invoice_number__icontains=searched) | Q(client__client_name__icontains=searched) |
+            Q(date_created__icontains=searched) | Q(due_date__icontains=searched), user=user
+        )
+
+        context = {
+            'current_route': resolve(request.path_info).url_name,
+            'searched': searched,
+            'user_invoices': user_invoices,
+        }
+    return render(request, 'main_page.html', context)

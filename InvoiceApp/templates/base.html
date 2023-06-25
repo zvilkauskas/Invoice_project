@@ -120,7 +120,7 @@
                   </button>
                   <form action="{% url 'search' %}" method="GET" class="width-70">
                       {% csrf_token %}
-                    <input class="form-control me-2" type="search" placeholder="Paieška" aria-label="Search">
+                    <input class="form-control me-2" type="search" placeholder="Paieška" aria-label="Search" name="searched">
                   </form>
                   <div class="navbar-nav">
                     <div class="nav-item text-nowrap">
@@ -134,6 +134,7 @@
                     <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-body-tertiary sidebar collapse">
                       <div class="position-sticky pt-3 sidebar-sticky">
                         <ul class="nav flex-column">
+<!--                            This page is not displayed-->
 <!--                          <li class="nav-item">-->
 <!--                            <a class="nav-link {% if current_route == 'main_page' %}active{% endif %}" aria-current="page" href="{% url 'main_page'%}">-->
 <!--                              <span data-feather="home" class="align-text-bottom"></span>-->

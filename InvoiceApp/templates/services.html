@@ -20,10 +20,10 @@
         <div class="d-inline-block">
             <a href="{% url 'add_service' %}" class="btn btn-primary">Pridėti paslaugą</a>
         </div>
-        <form action="{% url 'search' %}" method="GET" class="d-inline-block width-20">
+        <form action="{% url 'search_services' %}" method="POST" class="d-inline-block width-20">
             {% csrf_token %}
             <div class="input-group">
-                <input class="form-control me-2" type="search" placeholder="Paslaugų paieška" aria-label="Search">
+                <input class="form-control me-2" type="search" placeholder="Paslaugų paieška" aria-label="Search" name="searched">
                 <button class="btn btn-outline-secondary" type="submit">Ieškoti</button>
             </div>
         </form>
@@ -50,7 +50,7 @@
                     <td>{{ service.service_code }}</td>
                     <td>{{ service.service_description|default:'Nenurodyta' }}</td>
                     <td>{{ service.service_quantity|default:'Nenurodyta' }}</td>
-                    <td>{{ service.service_price|default:'Nenurodyta'|floatformat:2 }}</td>
+                    <td>{{ service.service_price|default:'Nenurodyta'|floatformat:2 }}€</td>
                     <td>
                         <a href="{% url 'edit_service' service.service_id %}" class="btn btn-warning">Redaguoti</a>
                     </td>

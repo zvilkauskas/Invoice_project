@@ -6,10 +6,10 @@
     <div class="inline">
         <div class="d-inline-block">
         </div>
-        <form action="{% url 'search' %}" method="GET" class="d-inline-block width-20">
+        <form action="{% url 'search_user_invoices' %}" method="POST" class="d-inline-block width-20">
             {% csrf_token %}
             <div class="input-group">
-                <input class="form-control me-2" type="search" placeholder="Mano sąskaitų paieška" aria-label="Search">
+                <input class="form-control me-2" type="search" placeholder="Mano sąskaitų paieška" aria-label="Search" name="searched">
                 <button class="btn btn-outline-secondary" type="submit">Ieškoti</button>
             </div>
         </form>

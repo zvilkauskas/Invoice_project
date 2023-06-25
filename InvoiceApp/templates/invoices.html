@@ -20,10 +20,10 @@
         <div class="d-inline-block">
             <a href="{% url 'create_invoice' %}" class="btn btn-primary">Ruošti sąskaitą</a>
         </div>
-        <form action="{% url 'search' %}" method="GET" class="d-inline-block width-20">
+        <form action="{% url 'search_invoices' %}" method="POST" class="d-inline-block width-20">
             {% csrf_token %}
             <div class="input-group">
-                <input class="form-control me-2" type="search" placeholder="Sąskaitų paieška" aria-label="Search">
+                <input class="form-control me-2" type="search" placeholder="Sąskaitų paieška" aria-label="Search" name="searched">
                 <button class="btn btn-outline-secondary" type="submit">Ieškoti</button>
             </div>
         </form>
@@ -40,6 +40,7 @@
                         <th scope="col">Statusas</th>
                         <th scope="col">Sąskaitos suma</th>
                         <th scope="col">Sąskaitą išrašė</th>
+                        <th></th>
                         <th></th>
                         <th></th>
                     </tr>

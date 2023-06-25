@@ -109,12 +109,12 @@ background-color:#eee;
                                     <th scope="row">{{ forloop.counter }}</th>
                                     <td>
                                         <div>
-                                            <p class="text-truncate font-size-14 mb-1">{{item.Name}}</p>
+                                            <p class="text-truncate font-size-14 mb-1">{{ item.Name }}</p>
                                         </div>
                                     </td>
-                                    <td class="text-end">{{item.Price}}</td>
-                                    <td class="text-end">{{item.Qty}}</td>
-                                    <td class="text-end">{{item.Total}}</td>
+                                    <td class="text-end">{{ item.Price|floatformat:2 }}€</td>
+                                    <td class="text-end">{{ item.Qty }}</td>
+                                    <td class="text-end">{{ item.Total|floatformat:2 }}€</td>
                                 </tr>
                                 {% endfor %}
 
@@ -134,9 +134,7 @@ background-color:#eee;
                         </div>
                         <div class="d-print-none mt-4">
                             <div class="float-end">
-                                <a href="javascript:window.print()" class="btn btn-success me-1"><i
-                                        class="fa fa-print"></i></a>
-<!--                                <a href="#" class="btn btn-primary w-md">Send</a>-->
+                                <a href="javascript:window.print()" class="btn btn-success me-1"><i class="fa fa-print"></i></a>
                             </div>
                         </div>
                     </div>

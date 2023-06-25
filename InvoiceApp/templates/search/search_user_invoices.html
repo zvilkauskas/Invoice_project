@@ -1,0 +1,55 @@
+{% if user.is_authenticated %}
+    <body>
+        {% if searched %}
+            <h1>Paieškos pagal "{{ searched }}" rezultatai:</h1>
+            <br>
+            {% if user_invoices %}
+                <div class="table-responsive">
+                    <table class="table table-striped table-sm">
+                        <thead>
+                            <tr>
+                                <th scope="col">Sąskaitos numeris</th>
+                                <th scope="col">Gavėjas</th>
+                                <th scope="col">Išrašymo data</th>
+                                <th scope="col">Apmokėti iki</th>
+                                <th scope="col">Statusas</th>
+                                <th scope="col">Sąskaitos suma</th>
+                                <th scope="col">Sąskaitą išrašė</th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            {% for invoice in user_invoices %}
+                            <tr>
+                                <td>{{ invoice.invoice_number }}</td>
+                                <td>{{ invoice.client.client_name }}</td>
+                                <td>{{ invoice.date_created|date:"Y-m-d H:i" }}</td>
+                                <td>{{ invoice.due_date|date:"Y-m-d" }}</td>
+                                <td>{{ invoice.get_invoice_status_display }}</td>
+                                <td>{{ invoice.invoice_total|floatformat:2 }}€</td>
+                                <td>{{ invoice.user.first_name }} {{ invoice.user.last_name }}</td>
+                                <td>
+                                    <a href="{% url 'invoice_template' invoice.invoice_id %}" class="btn btn-success">Peržiūrėti</a>
+                                </td>
+                                <td>
+                                    <a href="{% url 'edit_invoice' invoice.invoice_id %}" class="btn btn-warning">Redaguoti</a>
+                                </td>
+                                <td>
+                                    <a href="{% url 'delete_invoice' invoice.invoice_id %}" class="btn btn-danger">Trinti</a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <h1>Jūs neturite prieigos prie šios sąskaitos, nes ją paruošė kitas vartotojas.</h1>
+            {% endif %}
+        {% else %}
+            <h1>Kadangi nieko neįvedėte į paieškos laukelį, todėl nieko neradome...<br>Bandykite dar kartą.</h1>
+        {% endif %}
+    </body>
+{% endif %}

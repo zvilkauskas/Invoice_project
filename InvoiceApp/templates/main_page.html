@@ -102,6 +102,12 @@
     {% elif current_route == 'search_invoices' %}
         {% include "search/search_invoices.html" %}
 
+    {% elif current_route == 'search_user_invoices' %}
+        {% include "search/search_user_invoices.html" %}
+
+    {% elif current_route == 'search' %}
+        {% include "search/search_base.html" %}
+
     {% endif %}
 
 </main>

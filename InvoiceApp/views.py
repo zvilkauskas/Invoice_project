@@ -593,17 +593,21 @@ def profile(request):
 def all_user_invoices(request):
     user = request.user
     user_invoices = Invoice.objects.filter(user=user).order_by('-invoice_number')
+    paginator = Paginator(user_invoices, 2)
+
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
 
     context = {
         'current_route': resolve(request.path_info).url_name,
         'title': 'Mano sąskaitos',
         'user': user,
-        'user_invoices': user_invoices
+        'user_invoices': page_obj
     }
     return render(request, 'main_page.html', context)
 
 
-# -------------------------- SEARCH CLIENTS, PRODUCTS, SERVICES, INVOICES, USER INVOICES VIEWS -------------------------
+# -------------------- MAIN SEARCH, SEARCH: CLIENTS, PRODUCTS, SERVICES, INVOICES, USER INVOICES VIEWS -------------------
 
 @login_required
 def search(request):

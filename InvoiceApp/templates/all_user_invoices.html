@@ -38,7 +38,8 @@
                         <td>{{ invoice.client.client_name }}</td>
                         <td>{{ invoice.date_created|date:"Y-m-d" }}</td>
                         <td>{{ invoice.due_date|date:"Y-m-d"}}</td>
-                        <td>{{ invoice.get_invoice_status_display }}</td>
+                        <td class="{% if invoice.invoice_status == 'l' %}text-dark{% elif invoice.invoice_status == 'p' %}text-danger{% elif invoice.invoice_status == 'a' %}text-success{% endif %}">
+                            {{ invoice.get_invoice_status_display }}
                         <td>{{ invoice.invoice_total|floatformat:2 }}€</td>
                         <td>
                             <a href="{% url 'invoice_template' invoice.invoice_id %}" class="btn btn-success">Peržiūrėti</a>
@@ -53,13 +54,32 @@
                     {% endfor %}
                     </tbody>
                 </table>
+                <div class="container">
+                    <nav aria-label="...">
+                        {% if user_invoices.has_other_pages %}
+                            <ul class="pagination pagination-sm justify-content-end">
+                                {% for i in user_invoices.paginator.page_range %}
+                                    {% if user_invoices.number == i %}
+                                        <li class="page-item active">
+                                            <a class="page-link">{{ i }}</a>
+                                        </li>
+                                    {% else %}
+                                        <li class="page-item">
+                                            <a class="page-link" href="?page={{ i }}">{{ i }}</a>
+                                        </li>
+                                    {% endif %}
+                                {% endfor %}
+                            </ul>
+                        {% endif %}
+                    </nav>
+                </div>
         {% else %}
             <div class="row">
                 <div class="col-lg-8">
                     <h5>{{ user.first_name }} dar neturi paruošęs nė vienos sąskaitos. Spauskite <a href="{% url 'create_invoice' %}">čia</a> norėdami paruošti savo pirmąją sąskaitą.</h5>
                 </div>
             </div>
-        {% endif %}
             </div>
+        {% endif %}
     </body>
 {% endif %}

@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import redirect, render
 from django.contrib.auth.forms import User
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.views.decorators.csrf import csrf_protect
@@ -9,7 +9,7 @@ from django.contrib.auth.models import User, auth
 from .models import Client, Product, Service, Invoice, CompanyInfo
 from .forms import AddNewClientForm, AddNewProductForm, AddNewServiceForm, CreateNewInvoiceForm, \
     EditInvoiceForm, EditProductForm, EditServiceForm, EditClientForm, EditCompanyInfoForm, AddCompanyInfoForm, \
-    UserUpdateForm, ProfileUpdateForm
+    UserUpdateForm, ProfileUpdateForm, ChangePasswordForm
 
 from django.urls import resolve
 from django.shortcuts import render
@@ -18,9 +18,10 @@ from django.http import JsonResponse
 from django.core.exceptions import PermissionDenied
 from django.db.models import Q
 from django.core.paginator import Paginator
+from django.contrib.auth import update_session_auth_hash
 
 
-# ----------------------------------------- LOGIN, LOGOUT, REGISTRATION VIEWS ------------------------------------------
+# --------------------------------- LOGIN, LOGOUT, REGISTRATION, CHANGE PASSWORD VIEWS ---------------------------------
 # register view
 @csrf_protect
 def register(request):
@@ -59,16 +60,16 @@ def register(request):
     return render(request, 'registration/register.html')
 
 
-def anonymous_required(function=None, redirect_url=None):
-    if not redirect_url:
-        redirect_url = 'main_page'
-
-    actual_decorator = user_passes_test(lambda user: user.is_anonymous, login_url=redirect_url)
-    if function:
-        return actual_decorator
-
-
-@anonymous_required
+# def anonymous_required(function=None, redirect_url=None):
+#     if not redirect_url:
+#         redirect_url = 'main_page'
+#
+#     actual_decorator = user_passes_test(lambda user: user.is_anonymous, login_url=redirect_url)
+#     if function:
+#         return actual_decorator
+#
+#
+# @anonymous_required
 def login(request):
     context = {}
     if request.method == 'GET':
@@ -96,6 +97,29 @@ def login(request):
 def logged_out(request):
     logout(request)
     return render(request, 'logged_out.html')
+
+
+@login_required
+def change_password(request):
+    if request.method == 'POST':
+        form = ChangePasswordForm(request.user, request.POST)
+        if form.is_valid():
+            user = form.save()
+            update_session_auth_hash(request, user)  # Keep the user logged in
+            messages.success(request, 'Slaptažodis pakeistas!')
+            return redirect('profile')
+        else:
+            messages.error(request, 'Nepavyko pakeisti slaptažodžio.')
+            return redirect('change_password')
+    else:
+        form = ChangePasswordForm(request.user)
+
+    context = {
+        'current_route': resolve(request.path_info).url_name,
+        'form': form,
+        'title': 'Slaptažodžio keitimas'
+    }
+    return render(request, 'main_page.html', context)
 
 
 # --------------------- INDEX, MAIN PAGE, COMPANY INFO, CLIENTS, PRODUCTS, SERVICES, INVOICES VIEWS --------------------
@@ -137,16 +161,6 @@ def company_info(request):
     return render(request, 'main_page.html', context)
 
 
-# @login_required
-# def clients(request):
-#     client_list = Client.objects.all()
-#
-#     context = {
-#         'clients': client_list,
-#         'current_route': resolve(request.path_info).url_name,
-#         'title': 'Klientai',
-#     }
-#     return render(request, 'main_page.html', context)
 @login_required
 def clients(request):
     client_list = Client.objects.all()

@@ -1,6 +1,7 @@
 from django import forms
 from django.contrib.auth.models import User
 from .models import Client, Product, Service, Invoice, CompanyInfo, Profile
+from django.contrib.auth.forms import PasswordChangeForm
 
 
 # Date input form
@@ -148,6 +149,21 @@ class ProfileUpdateForm(forms.ModelForm):
     class Meta:
         model = Profile
         fields = ('responsibilities', 'phone_number')
+
+
+class ChangePasswordForm(PasswordChangeForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["old_password"].widget = forms.PasswordInput(attrs={"class": "form-control"})
+        self.fields["new_password1"].widget = forms.PasswordInput(attrs={"class": "form-control"})
+        self.fields["new_password2"].widget = forms.PasswordInput(attrs={"class": "form-control"})
+        self.fields["old_password"].label = 'Senas slaptažodis'
+        self.fields["new_password1"].label = 'Naujas slaptažodis'
+        self.fields["new_password2"].label = 'Pakartokite naują slaptažodį'
+        self.fields["old_password"].help_text = None
+
+
+
 
 
 

@@ -20,13 +20,13 @@ class Client(models.Model):
 
     def __str__(self):
         return f"{self.client_name} " \
-               f"{self.registration_number} " \
-               f"{self.vat_number} " \
-               f"{self.address} " \
-               f"{self.email_address} " \
-               f"{self.phone_number} " \
-            # f"{self.date_created} " \
-        # f"{self.last_updated} "
+               # f"{self.registration_number} " \
+               # f"{self.vat_number} " \
+               # f"{self.address} " \
+               # f"{self.email_address} " \
+               # f"{self.phone_number} " \
+               # f"{self.date_created} " \
+               # f"{self.last_updated} "
 
     # Saves date_created and last_updated data in desired formatting
     # Settings.py USE_TZ = False.
@@ -123,7 +123,7 @@ class Invoice(models.Model):
     invoice_name = models.CharField("Serija", max_length=200, blank=True, null=True, default='INV')
 
     def increment_invoice_number():
-        # jeigu numeris butu keiciamas ranka, 'invoice_id' pakeisti i order_by('invoice_number')
+        # if number would be changed manually, 'invoice_id' has to be replaced by order_by('invoice_number')
         last_invoice = Invoice.objects.all().order_by('invoice_id').last()
         if not last_invoice:
             return '00001'
@@ -162,8 +162,6 @@ class Invoice(models.Model):
     # Related data
     client = models.ForeignKey(Client, verbose_name="Klientas", on_delete=models.SET_NULL, blank=False, null=True)
     user = models.ForeignKey(User, on_delete=models.SET_NULL, blank=True, null=True)
-    # product = models.ForeignKey(Product, verbose_name="Prekė", on_delete=models.SET_NULL, blank=True, null=True)
-    # service = models.ForeignKey(Service, verbose_name="Paslauga", on_delete=models.SET_NULL, blank=True, null=True)
     # Additional data
     date_created = models.DateTimeField(verbose_name="Sukurta", blank=True, null=True, default=datetime.now)
     last_updated = models.DateTimeField(verbose_name="Redaguota", blank=True, null=True)
@@ -178,14 +176,14 @@ class Invoice(models.Model):
             self.date_created = formatted_date
         self.last_updated = formatted_date
         self.due_date = formatted_date
-        self.due_date = self.apmoketi_iki_papildomai()
+        self.due_date = self.recalculate_due_back()
 
         super(Invoice, self).save(*args, **kwargs)
 
-    def apmoketi_iki_papildomai(self):
-        reiksme = int(self.payment_terms)
-        terminas = date.today() + timedelta(days=reiksme)
-        return terminas
+    def recalculate_due_back(self):
+        value = int(self.payment_terms)
+        result = date.today() + timedelta(days=value)
+        return result
 
     class Meta:
         verbose_name = "Invoice"

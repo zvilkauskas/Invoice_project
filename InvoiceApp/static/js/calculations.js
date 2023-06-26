@@ -168,7 +168,7 @@ function getData() {
     });
     var jsonified_objects = JSON.stringify(objects);
 //    console.log(objects);
-      console.log(jsonified_objects)
+//    console.log(jsonified_objects)
     $('.invoiceProductsServices').val(jsonified_objects);
 }
 

@@ -118,7 +118,7 @@
                   <button class="navbar-toggler position-absolute d-md-none collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                   </button>
-                  <form action="{% url 'search' %}" method="GET" class="width-70">
+                  <form action="{% url 'search' %}" method="POST" class="width-70">
                       {% csrf_token %}
                     <input class="form-control me-2" type="search" placeholder="Paieška" aria-label="Search" name="searched">
                   </form>
@@ -198,7 +198,6 @@
         <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
         <script src="{% static 'js/dashboard2.js' %}"></script>
     </body>
-
-
+</html>
 
 

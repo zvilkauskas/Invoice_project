@@ -2,19 +2,11 @@ from django.contrib import admin
 from .models import Client, Product, Service, Invoice, CompanyInfo, Profile
 
 
-class CompanyInfoAdmin(admin.ModelAdmin):
-    list_display = (
-        'company_name', 'company_registration_number', 'company_vat_number', 'company_address',
-        'company_email_address', 'company_phone_number'
-    )
-
-
 class ClientAdmin(admin.ModelAdmin):
     # Changes default date and time format (date: M-D-Y, time: a.m./p.m.) to desired format in admin page
     @admin.display(description='Sukurtas')
     def admin_date_created(self, obj):
         return obj.date_created.strftime('%Y-%m-%d, %H:%M')
-        # return obj.date_created.strftime('%Y-%m-%d, %H:%M')
 
     # This one does the same in the next column
     @admin.display(description='Redaguotas')
@@ -72,8 +64,20 @@ class InvoiceAdmin(admin.ModelAdmin):
 
     list_display = (
         'invoice_id', 'invoice_name', 'invoice_number', 'admin_date_created',
-        'admin_due_date', 'admin_last_updated', 'invoice_status', 'invoice_total', 'client')  # 'product', 'service',)
+        'admin_due_date', 'admin_last_updated', 'invoice_status', 'invoice_total', 'client')
 
+
+class CompanyInfoAdmin(admin.ModelAdmin):
+    list_display = (
+        'company_name', 'company_registration_number', 'company_vat_number', 'company_address',
+        'company_email_address', 'company_phone_number'
+    )
+
+
+class ProfileAdmin(admin.ModelAdmin):
+    list_display = (
+        'user', 'responsibilities', 'phone_number'
+    )
 
 
 admin.site.register(Client, ClientAdmin)

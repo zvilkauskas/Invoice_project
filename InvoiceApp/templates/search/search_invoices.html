@@ -15,6 +15,9 @@
                                 <th scope="col">Statusas</th>
                                 <th scope="col">Sąskaitos suma</th>
                                 <th scope="col">Sąskaitą išrašė</th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
                             </tr>
                         </thead>
 
@@ -28,6 +31,15 @@
                             <td>{{ invoice.get_invoice_status_display }}</td>
                             <td>{{ invoice.invoice_total|floatformat:2 }}€</td>
                             <td>{{ invoice.user.first_name }} {{ invoice.user.last_name }}</td>
+                            <td>
+                                <a href="{% url 'invoice_template' invoice.invoice_id %}" class="btn btn-success">Peržiūrėti</a>
+                            </td>
+                            <td>
+                                <a href="{% url 'edit_invoice' invoice.invoice_id %}" class="btn btn-warning">Redaguoti</a>
+                            </td>
+                            <td>
+                                <a href="{% url 'delete_invoice' invoice.invoice_id %}" class="btn btn-danger">Trinti</a>
+                            </td>
                         </tr>
                         {% endfor %}
                         </tbody>

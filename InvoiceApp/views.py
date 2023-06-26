@@ -17,7 +17,7 @@ import json
 from django.http import JsonResponse
 from django.core.exceptions import PermissionDenied
 from django.db.models import Q
-from django.http import HttpResponse
+from django.core.paginator import Paginator
 
 
 # ----------------------------------------- LOGIN, LOGOUT, REGISTRATION VIEWS ------------------------------------------
@@ -137,12 +137,26 @@ def company_info(request):
     return render(request, 'main_page.html', context)
 
 
+# @login_required
+# def clients(request):
+#     client_list = Client.objects.all()
+#
+#     context = {
+#         'clients': client_list,
+#         'current_route': resolve(request.path_info).url_name,
+#         'title': 'Klientai',
+#     }
+#     return render(request, 'main_page.html', context)
 @login_required
 def clients(request):
-    clients = Client.objects.all()
+    client_list = Client.objects.all()
+    paginator = Paginator(client_list, 2)  # Show 2 clients per page
+
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
 
     context = {
-        'clients': clients,
+        'clients': page_obj,
         'current_route': resolve(request.path_info).url_name,
         'title': 'Klientai',
     }
@@ -151,10 +165,14 @@ def clients(request):
 
 @login_required
 def products(request):
-    products = Product.objects.all()
+    product_list = Product.objects.all()
+    paginator = Paginator(product_list, 2)
+
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
 
     context = {
-        'products': products,
+        'products': page_obj,
         'current_route': resolve(request.path_info).url_name,
         'title': 'Prekės',
     }
@@ -163,10 +181,14 @@ def products(request):
 
 @login_required
 def services(request):
-    services = Service.objects.all()
+    service_list = Service.objects.all()
+    paginator = Paginator(service_list, 2)
+
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
 
     context = {
-        'services': services,
+        'services': page_obj,
         'current_route': resolve(request.path_info).url_name,
         'title': 'Paslaugos',
     }
@@ -175,10 +197,14 @@ def services(request):
 
 @login_required
 def invoices(request):
-    invoices = Invoice.objects.all().order_by('-invoice_number')
+    invoice_list = Invoice.objects.all().order_by('-invoice_number')
+    paginator = Paginator(invoice_list, 2)
+
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
 
     context = {
-        'invoices': invoices,
+        'invoices': page_obj,
         'current_route': resolve(request.path_info).url_name,
         'title': 'Visos sąskaitos'
     }
@@ -279,18 +305,18 @@ def add_service(request):
 @login_required(login_url='login')
 def create_full_invoice(request):
     if request.method == 'POST':
-        # gauname rezultata is JS
+        # Here I get result from JS
         json_of_products_services = request.POST.get('invoice_products_services')
-        # cia vyksta serializacija
+        # Serialization happens here
         list_of_p_s = json.loads(json_of_products_services)
-        # sukuriamas naujas stringas, kuriame graziai israsoma saskaitos informacija
+        # Here new string is created which contains invoice details: products and services count, price, total price
         pretty_string = ""
         for element in list_of_p_s:
             pretty_string += f"Name: {element['name']}, Qty: {element['quantity']}vnt., " \
                              f"Price: {element['price']}€, Total: {element['total']}€\n"
 
         invoice_form = CreateNewInvoiceForm(request.POST)
-        # sukurtas forms.py metodas set_invoice_products_services, kuris leidzia django pakeisti duomenis
+        # Created new method set_invoice_products_services in forms.py, which allow django to change data
         invoice_form.set_invoice_products_services(pretty_string)
         if invoice_form.is_valid():
             invoice = invoice_form.save(commit=False)
@@ -579,9 +605,41 @@ def all_user_invoices(request):
 
 # -------------------------- SEARCH CLIENTS, PRODUCTS, SERVICES, INVOICES, USER INVOICES VIEWS -------------------------
 
+@login_required
 def search(request):
+    searched = ''
+    clients = []
+    products = []
+    services = []
+    invoices = []
 
-    pass
+    if request.method == 'POST':
+        searched = request.POST['searched']
+        clients = Client.objects.filter(
+            Q(client_name__icontains=searched) | Q(registration_number__icontains=searched) |
+            Q(vat_number__icontains=searched) | Q(address__icontains=searched) | Q(email_address__icontains=searched) |
+            Q(phone_number__icontains=searched)
+        )
+        products = Product.objects.filter(
+            Q(product_name__icontains=searched) | Q(product_code__icontains=searched)
+        )
+        services = Service.objects.filter(
+            Q(service_name__icontains=searched) | Q(service_code__icontains=searched)
+        )
+        invoices = Invoice.objects.filter(
+            Q(invoice_number__icontains=searched) | Q(client__client_name__icontains=searched) |
+            Q(date_created__icontains=searched) | Q(due_date__icontains=searched)
+        )
+
+    context = {
+        'current_route': resolve(request.path_info).url_name,
+        'searched': searched,
+        'clients': clients,
+        'products': products,
+        'services': services,
+        'invoices': invoices,
+    }
+    return render(request, 'main_page.html', context)
 
 
 @login_required
@@ -590,7 +648,8 @@ def search_clients(request):
         searched = request.POST['searched']
         clients = Client.objects.filter(
             Q(client_name__icontains=searched) | Q(registration_number__icontains=searched) |
-            Q(vat_number__icontains=searched) | Q(address__icontains=searched) | Q(email_address__icontains=searched)
+            Q(vat_number__icontains=searched) | Q(address__icontains=searched) | Q(email_address__icontains=searched) |
+            Q(phone_number__icontains=searched)
         )
 
         context = {

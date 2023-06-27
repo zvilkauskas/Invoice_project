@@ -16,7 +16,7 @@
 {% endif %}
 
 <body>
-<link href="{% static 'css/short_field.css' %}" rel="stylesheet">
+    <link href="{% static 'css/short_field.css' %}" rel="stylesheet">
     <div class="short_input">
         <form method="POST">
             {% csrf_token %}
@@ -52,7 +52,7 @@
             </div>
             <div class="form-group">
                 <label for="company_phone_number"></label>
-                <input name="company_phone_number" type="number" class="form-control" id="company_phone_number"
+                <input name="company_phone_number" type="text" class="form-control" id="company_phone_number"
                        placeholder="Telefono numeris, +3706...">
                 <small class="form-text text-muted">Iki 20 simbolių.</small>
             </div>

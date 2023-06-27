@@ -1,7 +1,7 @@
 {% load static%}
 {% if user.is_authenticated %}
 <body>
-<link href="{% static 'css/medium_field.css' %}" rel="stylesheet">
+    <link href="{% static 'css/medium_field.css' %}" rel="stylesheet">
     <div class="medium_input">
         <form method="POST">
             {% csrf_token %}

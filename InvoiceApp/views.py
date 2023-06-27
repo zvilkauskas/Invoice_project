@@ -9,7 +9,6 @@ from .models import Client, Product, Service, Invoice, CompanyInfo
 from .forms import AddNewClientForm, AddNewProductForm, AddNewServiceForm, CreateNewInvoiceForm, \
     EditInvoiceForm, EditProductForm, EditServiceForm, EditClientForm, EditCompanyInfoForm, AddCompanyInfoForm, \
     UserUpdateForm, ProfileUpdateForm, ChangePasswordForm
-
 from django.urls import resolve
 from django.shortcuts import render
 import json
@@ -45,7 +44,7 @@ def register(request):
                 if User.objects.filter(email=email).exists():
                     messages.error(request, f'Vartotojas su el. paštu {email} jau užregistruotas!')
                     return redirect('register')
-                # If those ifs passes, new user ir created
+                # If those ifs passes, new user is created
                 else:
                     User.objects.create_user(
                         username=username, first_name=first_name, last_name=last_name,
@@ -111,7 +110,7 @@ def change_password(request):
     return render(request, 'main_page.html', context)
 
 
-# --------------------- INDEX, MAIN PAGE, COMPANY INFO, CLIENTS, PRODUCTS, SERVICES, INVOICES VIEWS --------------------
+# ------------- INDEX, MAIN PAGE, COMPANY INFO, CLIENTS, PRODUCTS, SERVICES, INVOICES VIEWS WITH PAGINATION ------------
 def index(request):
     context = {}
     return render(request, 'index.html', context)
@@ -153,7 +152,7 @@ def company_info(request):
 @login_required
 def clients(request):
     client_list = Client.objects.all()
-    paginator = Paginator(client_list, 2)  # Show 2 clients per page
+    paginator = Paginator(client_list, 3)  # Show 3 clients per page
 
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
@@ -169,7 +168,7 @@ def clients(request):
 @login_required
 def products(request):
     product_list = Product.objects.all()
-    paginator = Paginator(product_list, 2)
+    paginator = Paginator(product_list, 3)
 
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
@@ -185,7 +184,7 @@ def products(request):
 @login_required
 def services(request):
     service_list = Service.objects.all()
-    paginator = Paginator(service_list, 2)
+    paginator = Paginator(service_list, 3)
 
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
@@ -201,7 +200,7 @@ def services(request):
 @login_required
 def invoices(request):
     invoice_list = Invoice.objects.all().order_by('-invoice_number')
-    paginator = Paginator(invoice_list, 2)
+    paginator = Paginator(invoice_list, 3)
 
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
@@ -508,10 +507,6 @@ def delete_company_info(request, pk):
         return redirect('company_info')
     else:
         raise PermissionDenied
-    # context = {
-    #     'current_route': resolve(request.path_info).url_name,
-    # }
-    # return render(request, 'main_page.html', context)
 
 
 def ajax_delete_company(request):

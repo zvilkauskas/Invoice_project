@@ -1,4 +1,6 @@
 from .models import CompanyInfo
+
+
 # This function gets current company name from CompanyInfo model to all pages.
 def company_name(request):
     try:

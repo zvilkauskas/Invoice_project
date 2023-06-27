@@ -4,12 +4,10 @@ from .models import Client, Product, Service, Invoice, CompanyInfo, Profile
 from django.contrib.auth.forms import PasswordChangeForm
 
 
-# Date input form
 class DateInputForm(forms.ModelForm):
     input_type = 'date'
 
 
-# User login form
 class UserLoginForm(forms.ModelForm):
     class Meta:
         model = User
@@ -78,7 +76,7 @@ class CreateNewInvoiceForm(forms.ModelForm):
         # {{form.field_name}}
 
 
-# ----------------------------------- EDIT COMPANY INFO INVOICE, PRODUCT, SERVICE, CLIENT FORMS -------------------------------------
+# ----------------------------- EDIT COMPANY INFO INVOICE, PRODUCT, SERVICE, CLIENT FORMS ------------------------------
 class EditCompanyInfoForm(forms.ModelForm):
     class Meta:
         model = CompanyInfo
@@ -97,7 +95,7 @@ class EditInvoiceForm(forms.ModelForm):
             'invoice_products_services': forms.Textarea(attrs={
                 'rows': 6,
                 'cols': 4,
-                'style':'resize:none;'
+                'style': 'resize:none;'
             })
         }
 
@@ -139,11 +137,13 @@ class UserUpdateForm(forms.ModelForm):
                 'readonly': True
             })
         }
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['first_name'].label = 'Vardas'
         self.fields['last_name'].label = 'Pavardė'
         self.fields['email'].label = 'El. paštas'
+
 
 class ProfileUpdateForm(forms.ModelForm):
     class Meta:
@@ -161,9 +161,3 @@ class ChangePasswordForm(PasswordChangeForm):
         self.fields["new_password1"].label = 'Naujas slaptažodis'
         self.fields["new_password2"].label = 'Pakartokite naują slaptažodį'
         self.fields["old_password"].help_text = None
-
-
-
-
-
-

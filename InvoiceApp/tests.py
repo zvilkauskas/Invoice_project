@@ -11,7 +11,7 @@
 # print(s)
 # print(q)
 
-# user = models.Foregnkey(User, on_delete..., related_name=profile)
+# user = models.Foreignkey(User, on_delete..., related_name=profile)
 # u = User.objects.get(id=1)
 
 from datetime import date, timedelta

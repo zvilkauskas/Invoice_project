@@ -1,5 +1,4 @@
 from django.urls import path, include
-from django.contrib.auth import views as auth_views
 
 from . import views
 
@@ -49,7 +48,6 @@ urlpatterns = [
     path('search_invoices/', views.search_invoices, name='search_invoices'),
     path('search_user_invoices/', views.search_user_invoices, name='search_user_invoices'),
 
-    # CHANGE USER PASSWORD
+    # ----- CHANGE USER PASSWORD ------
     path('change-password/', views.change_password, name='change_password'),
-
 ]

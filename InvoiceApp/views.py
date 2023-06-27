@@ -510,16 +510,22 @@ def delete_company_info(request, pk):
 
 
 def ajax_delete_company(request):
+    # Checking if the request is an AJAX request 'XMLHttpRequest' and if HTTP method is POST
     if request.headers.get('x-requested-with') == 'XMLHttpRequest' and request.method == 'POST':
+        # Gets 'company_id' and converts it to integer
         company_id = int(request.POST.get('company_id'))
+        # Gets CompanyInfo object from DB by using 'company_id'
         company_object = CompanyInfo.objects.get(company_id=company_id)
+        # Gets 'company_name' from company_object
         company_name = company_object.company_name
+        # Delete happens here
         company_object.delete()
 
         confirmation = {
             'message': f"Rekvizitai, kurių ID {company_id} ir įmonės pavadinimas '{company_name}', ištrinti!",
             'redirect': f"/invoices/company/"
         }
+        # Returns JSON response with the confirmation dict.
         return JsonResponse(confirmation, safe=False)
 
     else:
@@ -591,7 +597,7 @@ def profile(request):
 def all_user_invoices(request):
     user = request.user
     user_invoices = Invoice.objects.filter(user=user).order_by('-invoice_number')
-    paginator = Paginator(user_invoices, 2)
+    paginator = Paginator(user_invoices, 3)
 
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
@@ -605,7 +611,7 @@ def all_user_invoices(request):
     return render(request, 'main_page.html', context)
 
 
-# -------------------- MAIN SEARCH, SEARCH: CLIENTS, PRODUCTS, SERVICES, INVOICES, USER INVOICES VIEWS -------------------
+# ------------------- MAIN SEARCH, SEARCH: CLIENTS, PRODUCTS, SERVICES, INVOICES, USER INVOICES VIEWS ------------------
 
 @login_required
 def search(request):

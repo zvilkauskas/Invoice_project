@@ -122,7 +122,7 @@ class Invoice(models.Model):
     invoice_id = models.AutoField(primary_key=True)
     invoice_name = models.CharField("Serija", max_length=200, blank=True, null=True, default='INV')
 
-    def increment_invoice_number():
+    def increment_invoice_number(self):
         # if number would be changed manually, 'invoice_id' has to be replaced by order_by('invoice_number')
         last_invoice = Invoice.objects.all().order_by('invoice_id').last()
         if not last_invoice:

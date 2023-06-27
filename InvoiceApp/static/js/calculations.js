@@ -8,7 +8,7 @@ $(document).ready(function () {
         var price = $(priceId).text();
         var sum = '#' + $(this).attr("id").replace("product_quantity", "product_sum");
         var newPrice = parseFloat(price) * parseFloat($(this).val());
-        $(sum).text(newPrice);
+        $(sum).text(newPrice.toFixed(2));
         calculateTotal()
         getData()
     });
@@ -67,7 +67,7 @@ $(document).ready(function(){
         var price = $(priceId).text();
         var sum = '#'+ $(this).attr("id").replace("service_quantity", "service_sum");
         var newPrice = parseFloat(price) * parseFloat($(this).val());
-        $(sum).text(newPrice);
+        $(sum).text(newPrice.toFixed(2));
         calculateTotal()
         getData()
     });
@@ -124,6 +124,8 @@ function calculateTotal() {
 
         if (!isNaN(value)) {
             sum += value;
+        } else {
+            sum = 0;
         }
     });
 

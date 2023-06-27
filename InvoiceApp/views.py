@@ -1,6 +1,5 @@
-from django.shortcuts import redirect, render
-from django.contrib.auth.forms import User
-from django.contrib.auth.decorators import login_required, user_passes_test
+from django.shortcuts import redirect
+from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_protect
 from django.contrib import messages
 from .forms import UserLoginForm
@@ -60,16 +59,6 @@ def register(request):
     return render(request, 'registration/register.html')
 
 
-# def anonymous_required(function=None, redirect_url=None):
-#     if not redirect_url:
-#         redirect_url = 'main_page'
-#
-#     actual_decorator = user_passes_test(lambda user: user.is_anonymous, login_url=redirect_url)
-#     if function:
-#         return actual_decorator
-#
-#
-# @anonymous_required
 def login(request):
     context = {}
     if request.method == 'GET':
